@@ -1,0 +1,11 @@
+{
+  "name": "asteroids_ai",
+  "version": "0.0.0",
+  "authors": [
+    "Scott Woodend <woodendscott@gmail.com>",
+    "Vinny Nguyen <vinnynguyen22@gmail.com>"
+  ],
+  "dependencies": {
+    "HTML5-Asteroids": "https://github.com/dmcinnes/HTML5-Asteroids.git"
+  }
+}
