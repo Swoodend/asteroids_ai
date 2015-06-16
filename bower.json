@@ -6,6 +6,7 @@
     "Vinny Nguyen <vinnynguyen22@gmail.com>"
   ],
   "dependencies": {
-    "HTML5-Asteroids": "https://github.com/dmcinnes/HTML5-Asteroids.git"
+    "HTML5-Asteroids": "https://github.com/dmcinnes/HTML5-Asteroids.git",
+    "jquery": "~2.1.4"
   }
 }
