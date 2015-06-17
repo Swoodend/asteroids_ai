@@ -139,8 +139,11 @@
   }
 
   function printToNeatoConsole() {
-    // TODO
-    // Div you push stuff into
+    var trialDisplay = $('#trial-display');
+    var numTrials = getNumberOfTrials();
+    if (getGameObject().lives === -1) {
+      $('<div/>').text('Hello').appendTo(trialDisplay);
+    }
   }
 
   function saveToDatabase() {
