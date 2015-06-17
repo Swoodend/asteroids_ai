@@ -45,29 +45,33 @@
 
     return d
   }
-
+  var gameWindow
   function getGameWindow () {
-    // TODO
-
+    if (!gameWindow) {
+      gameWindow = getGameFrame().contentWindow
+    }
+    return gameWindow
   }
 
+  function getGameJquery () {
+    return getGameVar('jQuery')
+  }
+
+  function getGameObject () {
+    return getGameVar('Game')
+  }
+
+  function getGameVar (varName) {
+    return getGameWindow()[varName]
+  }
+
+  var gameFrame
   function getGameFrame () {
-    // TODO
-
+    if (!gameFrame) {
+      gameFrame = frames['game-frame']
+    }
+    return gameFrame
   }
-
-  // -a trial suite is playing the game with an AI a numeber of times and recording what it accomplishes
-  // -running a trial suite is going to be a function
-  // -need a counter - number of times to play game
-  // -start the first game
-
-  // -playing a game (what is it?)
-  // -load game into iframe
-  // -after the game loads, start playing
-
-  // -playing (what is it?)
-  // -collect info about loaded game, such as window obj and jQuery
-  // -press spacebar (start game)
 
   function startGame () {
     pressSpacebar()
@@ -76,8 +80,21 @@
     return g
   }
 
-  function pressSpaceBar () {
-    // TODO press the space bar
+  function pressKey (key) {
+    // TODO press the key
+    KEY_CODES = {
+      32: 'space',
+      37: 'left',
+      38: 'up',
+      39: 'right',
+      40: 'down',
+      70: 'f',
+      71: 'g',
+      72: 'h',
+      77: 'm',
+      80: 'p'
+    }
+
   }
 
   function tick (gameDeferred) {
@@ -133,5 +150,9 @@
   function getKeysToPress (gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
     return [32]
+  }
+
+  function getGameId () {
+    return 1
   }
 })()
