@@ -112,7 +112,7 @@
 
   }
 
-  var defaultTickDuration = 100
+  var defaultTickDuration = 1000 / 30
   function getTickDuration () {
     return defaultTickDuration
   }
@@ -122,7 +122,7 @@
     // if points havent changed in a long time return false
     // if you are dead return false
 
-    Game.lives > 0
+    return getGameObject().lives !== -1
   }
 
   var previouslyPressedKeys
