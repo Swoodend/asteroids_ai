@@ -10,17 +10,14 @@
     runTrials(getNumberOfTrials())
   }
 
-  function getNumberOfTrials () {
-    return 1; // this can be changed later 
-  }
-
   function runTrials (numberOfTrials) {
     loadGameIntoIframe().done(function () {
       startGame().done(function () {
-        endgame()
-
-        if (numberOfTrials) {
+        endGame()
+        numberOfTrials--
+        if (numberOfTrials > 0) {
           runTrials(numberOfTrials)
+
         } else {
           endTrials()
         }
@@ -43,9 +40,9 @@
     })
     // load game into iframe and then resolve the deferred
     // $(getGameFrame()).on('load', d.resolve.bind(d))
-
     return d
   }
+
   var gameWindow
   function getGameWindow () {
     if (!gameWindow) {
@@ -83,6 +80,7 @@
 
   function endGame () {
     releaseKeys()
+
   }
 
   function pressSpacebar () {
@@ -107,33 +105,33 @@
     pressKeys(keysToPress)
     printToNeatoConsole(gameState, keysToPress)
     saveToDatabase(gameState, keysToPress)
-    if (gameShouldContinueBeingPlayed()) {
-      setTimeout(function () {
+    setTimeout(function () {
+      if (gameShouldContinueBeingPlayed()) {
         tick(gameDeferred)
-      }, getTickDuration())
-    } else {
-      gameDeferred.resolve()
-    }
-
+      } else {
+        gameDeferred.resolve()
+      }
+    }, getTickDuration())
   }
 
-  var defaultTickDuration = 1000 / 30
+  var defaultTickDuration = 1000 / 50
   function getTickDuration () {
     return defaultTickDuration
   }
 
   function gameShouldContinueBeingPlayed () {
-    return getGameObject().lives !== -1
+    return getGameObject().lives != -1
   }
 
+  var previouslyPressedKeys
   function releaseKeys () {
     if (previouslyPressedKeys) {
       previouslyPressedKeys.forEach(releaseKey)
     }
   }
 
-  var previouslyPressedKeys
   function pressKeys (keysToPress) {
+    releaseKeys()
     keysToPress.forEach(pressKey)
     previouslyPressedKeys = keysToPress; // last line
   }
@@ -141,9 +139,8 @@
   function printToNeatoConsole () {
     var trialDisplay = $('#trial-display')
     var numTrials = getNumberOfTrials()
-    // TODO append data about the entire trail to text after the trial has finished
     if (getGameObject().lives === -1) {
-      $('<div/>').text('number of trials: ' + numTrials).appendTo(trialDisplay)
+      $('<div/>').text('Hello').appendTo(trialDisplay)
     }
   }
 
@@ -167,7 +164,7 @@
     if (Math.random() > 0.5) {
       keysToPress.push(38)
     }
-    if (Math.random() > 0.5) {
+    if (Math.random() > 0.05) {
       keysToPress.push(39)
     }
     return keysToPress
@@ -180,4 +177,5 @@
   function getAiId () {
     return 1
   }
+
 })()
