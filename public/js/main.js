@@ -35,8 +35,8 @@
 
   function loadGameIntoIframe () {
     var d = $.Deferred()
-    getGameWindow().reload()
-    $(getFameFrame()).on('load', function () {
+    getGameWindow().location.reload()
+    $(getGameFrame()).on('load', function () {
       // TODO needs to wait until game is ready
       d.resolve()
     })
@@ -80,21 +80,14 @@
     return g
   }
 
-  function pressKey (key) {
-    // TODO press the key
-    KEY_CODES = {
-      32: 'space',
-      37: 'left',
-      38: 'up',
-      39: 'right',
-      40: 'down',
-      70: 'f',
-      71: 'g',
-      72: 'h',
-      77: 'm',
-      80: 'p'
-    }
+  function pressSpacebar () {
+    pressKey(32)
+  }
 
+  function pressKey (keyCode) {
+    var e = getGameJquery().Event('keydown')
+    e.keyCode = keyCode
+    getGameJquery()(getGameWindow()).trigger(e)
   }
 
   function tick (gameDeferred) {
@@ -106,7 +99,7 @@
     if (gameShouldContinueBeingPlayed()) {
       setTimeout(function () {
         tick(gameDeferred)
-      }, gettickDuration())
+      }, getTickDuration())
     } else {
       gameDeferred.resolve()
     }
@@ -115,9 +108,9 @@
 
   var defaultTickDuration = 1000 / 60
   function getTickDuration () {
-    return defaultTIckDuration
+    return defaultTickDuration
   }
-  function gameShouldContinueBeingPLayed () {
+  function gameShouldContinueBeingPlayed () {
     // TODO
     // if points havent changed in a long time return false
     // if you are dead return false
@@ -153,6 +146,10 @@
   }
 
   function getGameId () {
+    return 1
+  }
+
+  function getAiId () {
     return 1
   }
 })()
