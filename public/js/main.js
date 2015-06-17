@@ -1,175 +1,180 @@
-(function () {
-  $(function () {
-    $('#start-button').on('click', function () {
-      $(this).attr('disabled', true)
-      startTrials()
-    })
-  })
+(function() {
+  $(function() {
+    $('#start-button').on('click', function() {
+      $(this).attr('disabled', true);
+      startTrials();
+    });
+  });
 
-  function startTrials () {
-    runTrials(getNumberOfTrials())
+  function startTrials() {
+    runTrials(getNumberOfTrials());
   }
 
-  function getNumberOfTrials () {
-    return 10; // this can be changed later 
+  function getNumberOfTrials() {
+    return 1; // this can be changed later
   }
 
-  function runTrials (numberOfTrials) {
+  function runTrials(numberOfTrials) {
     loadGameIntoIframe().done(function () {
       startGame().done(function () {
-        numberOfTrials--
-        if (numberOfTrials) {
-          runTrials(numberOfTrials)
+        endGame();
+        numberOfTrials--;
+        if (numberOfTrials > 0) {
+          runTrials(numberOfTrials);
         } else {
-          endTrials()
+          endTrials();
         }
-      })
-    })
+      });
+    });
   }
 
-  function endTrials () {
+  function endTrials() {
     // TODO clean things up
     // add start trial button back
-    $('#start-button').removeAttr('disabled')
+    $('#start-button').removeAttr('disabled');
   }
 
-  function loadGameIntoIframe () {
-    var d = $.Deferred()
-    getGameWindow().location.reload()
-    $(getGameFrame()).on('load', function () {
+  function loadGameIntoIframe() {
+    var d = $.Deferred();
+    getGameWindow().location.reload();
+    $(getGameFrame()).on('load', function() {
       // TODO needs to wait until game is ready
-      d.resolve()
-    })
+      d.resolve();
+    });
     // load game into iframe and then resolve the deferred
     // $(getGameFrame()).on('load', d.resolve.bind(d))
-
-    return d
+    return d;
   }
-  var gameWindow
-  function getGameWindow () {
+
+  var gameWindow;
+  function getGameWindow() {
     if (!gameWindow) {
-      gameWindow = getGameFrame().contentWindow
+      gameWindow = getGameFrame().contentWindow;
     }
-    return gameWindow
+    return gameWindow;
   }
 
-  function getGameJquery () {
-    return getGameVar('jQuery')
+  function getGameJquery() {
+    return getGameVar('jQuery');
   }
 
-  function getGameObject () {
-    return getGameVar('Game')
+  function getGameObject() {
+    return getGameVar('Game');
   }
 
-  function getGameVar (varName) {
-    return getGameWindow()[varName]
+  function getGameVar(varName) {
+    return getGameWindow()[varName];
   }
 
-  var gameFrame
-  function getGameFrame () {
+  var gameFrame;
+  function getGameFrame() {
     if (!gameFrame) {
-      gameFrame = frames['game-frame']
+      gameFrame = frames['game-frame'];
     }
-    return gameFrame
+    return gameFrame;
   }
 
-  function startGame () {
-    pressSpacebar()
-    var g = $.Deferred()
-    tick(g)
-    return g
+  function startGame() {
+    pressSpacebar();
+    var g = $.Deferred();
+    tick(g);
+    return g;
   }
 
-  function pressSpacebar () {
-    pressKey(32)
+  function endGame() {
+    releaseKeys();
   }
 
-  function pressKey (keyCode) {
-    var e = getGameJquery().Event('keydown')
-    e.keyCode = keyCode
-    getGameJquery()(getGameWindow()).trigger(e)
+  function pressSpacebar() {
+    pressKey(32);
   }
 
-  function releaseKey (keyCode) {
-    var e = getGameJquery().Event('keyup')
-    e.keyCode = keyCode
-    getGameJquery()(getGameWindow()).trigger(e)
+  function pressKey(keyCode) {
+    var e = getGameJquery().Event('keydown');
+    e.keyCode = keyCode;
+    getGameJquery()(getGameWindow()).trigger(e);
   }
 
-  function tick (gameDeferred) {
-    var gameState = getGameStateNow()
-    var keysToPress = getKeysToPress(gameState)
-    pressKeys(keysToPress)
-    printToNeatoConsole(gameState, keysToPress)
-    saveToDatabase(gameState, keysToPress)
-    if (gameShouldContinueBeingPlayed()) {
-      setTimeout(function () {
-        tick(gameDeferred)
-      }, getTickDuration())
-    } else {
-      gameDeferred.resolve()
-    }
-
+  function releaseKey(keyCode) {
+    var e = getGameJquery().Event('keyup');
+    e.keyCode = keyCode;
+    getGameJquery()(getGameWindow()).trigger(e);
   }
 
-  var defaultTickDuration = 100
-  function getTickDuration () {
-    return defaultTickDuration
+  function tick(gameDeferred) {
+    var gameState = getGameStateNow();
+    var keysToPress = getKeysToPress(gameState);
+    pressKeys(keysToPress);
+    printToNeatoConsole(gameState, keysToPress);
+    saveToDatabase(gameState, keysToPress);
+    setTimeout(function() {
+      if (gameShouldContinueBeingPlayed()) {
+        tick(gameDeferred);
+      } else {
+        gameDeferred.resolve();
+      }
+    }, getTickDuration());
   }
 
-  function gameShouldContinueBeingPlayed () {
-    // TODO IMPLEMENT NEXT
-    // if points havent changed in a long time return false
-    // if you are dead return false
-
-    Game.lives > 0
+  var defaultTickDuration = 1000/50;
+  function getTickDuration() {
+    return defaultTickDuration;
   }
 
-  var previouslyPressedKeys
-  function pressKeys (keysToPress) {
+  function gameShouldContinueBeingPlayed() {
+    return getGameObject().lives != -1;
+  }
+
+  var previouslyPressedKeys;
+  function releaseKeys() {
     if (previouslyPressedKeys) {
-      previouslyPressedKeys.forEach(releaseKey)
+      previouslyPressedKeys.forEach(releaseKey);
     }
-    keysToPress.forEach(pressKey)
+  }
+
+  function pressKeys(keysToPress) {
+    releaseKeys();
+    keysToPress.forEach(pressKey);
     previouslyPressedKeys = keysToPress; // last line
   }
 
-  function printToNeatoConsole () {
+  function printToNeatoConsole() {
     // TODO
     // Div you push stuff into
   }
 
-  function saveToDatabase () {
+  function saveToDatabase() {
     // TODO
   }
 
-  function getGameStateNow () {
+  function getGameStateNow() {
     return {}; // all game state in this object
   }
 
-  function getKeysToPress (gameState) {
+  function getKeysToPress(gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
-    var keysToPress = []
+    var keysToPress = [];
     if (Math.random() > 0.5) {
-      keysToPress.push(32)
+      keysToPress.push(32);
     }
     if (Math.random() > 0.5) {
-      keysToPress.push(37)
+      keysToPress.push(37);
     }
     if (Math.random() > 0.5) {
-      keysToPress.push(38)
+      keysToPress.push(38);
     }
-    if (Math.random() > 0.5) {
-      keysToPress.push(39)
+    if (Math.random() > 0.05) {
+      keysToPress.push(39);
     }
-    return keysToPress
+    return keysToPress;
   }
 
-  function getGameId () {
-    return 1
+  function getGameId() {
+    return 1;
   }
 
-  function getAiId () {
-    return 1
+  function getAiId() {
+    return 1;
   }
-})()
+
+})();
