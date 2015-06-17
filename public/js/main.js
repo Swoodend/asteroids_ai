@@ -8,12 +8,12 @@
 
   function startTrials () {
     runTrials(getNumberOfTrials())
-
   }
 
   function getNumberOfTrials () {
     return 10; // this can be changed later 
   }
+
   function runTrials (numberOfTrials) {
     loadGameIntoIframe().done(function () {
       startGame().done(function () {
@@ -90,6 +90,12 @@
     getGameJquery()(getGameWindow()).trigger(e)
   }
 
+  function releaseKey (keyCode) {
+    var e = getGameJquery().Event('keyup')
+    e.keyCode = keyCode
+    getGameJquery()(getGameWindow()).trigger(e)
+  }
+
   function tick (gameDeferred) {
     var gameState = getGameStateNow()
     var keysToPress = getKeysToPress(gameState)
@@ -106,24 +112,25 @@
 
   }
 
-  var defaultTickDuration = 1000 / 60
+  var defaultTickDuration = 100
   function getTickDuration () {
     return defaultTickDuration
   }
+
   function gameShouldContinueBeingPlayed () {
-    // TODO
+    // TODO IMPLEMENT NEXT
     // if points havent changed in a long time return false
     // if you are dead return false
-    return true
+
+    Game.lives > 0
   }
 
   var previouslyPressedKeys
   function pressKeys (keysToPress) {
     if (previouslyPressedKeys) {
-      // TODO Release previously pressed keys and press new keys
-
+      previouslyPressedKeys.forEach(releaseKey)
     }
-    // TODO Press new keys
+    keysToPress.forEach(pressKey)
     previouslyPressedKeys = keysToPress; // last line
   }
 
@@ -142,7 +149,20 @@
 
   function getKeysToPress (gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
-    return [32]
+    var keysToPress = []
+    if (Math.random() > 0.5) {
+      keysToPress.push(32)
+    }
+    if (Math.random() > 0.5) {
+      keysToPress.push(37)
+    }
+    if (Math.random() > 0.5) {
+      keysToPress.push(38)
+    }
+    if (Math.random() > 0.5) {
+      keysToPress.push(39)
+    }
+    return keysToPress
   }
 
   function getGameId () {
