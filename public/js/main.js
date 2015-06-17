@@ -11,13 +11,14 @@
   }
 
   function getNumberOfTrials () {
-    return 10; // this can be changed later 
+    return 1; // this can be changed later 
   }
 
   function runTrials (numberOfTrials) {
     loadGameIntoIframe().done(function () {
       startGame().done(function () {
-        numberOfTrials--
+        endgame()
+
         if (numberOfTrials) {
           runTrials(numberOfTrials)
         } else {
@@ -80,6 +81,10 @@
     return g
   }
 
+  function endGame () {
+    releaseKeys()
+  }
+
   function pressSpacebar () {
     pressKey(32)
   }
@@ -118,25 +123,28 @@
   }
 
   function gameShouldContinueBeingPlayed () {
-    // TODO IMPLEMENT NEXT
-    // if points havent changed in a long time return false
-    // if you are dead return false
-
     return getGameObject().lives !== -1
+  }
+
+  function releaseKeys () {
+    if (previouslyPressedKeys) {
+      previouslyPressedKeys.forEach(releaseKey)
+    }
   }
 
   var previouslyPressedKeys
   function pressKeys (keysToPress) {
-    if (previouslyPressedKeys) {
-      previouslyPressedKeys.forEach(releaseKey)
-    }
     keysToPress.forEach(pressKey)
     previouslyPressedKeys = keysToPress; // last line
   }
 
   function printToNeatoConsole () {
-    // TODO
-    // Div you push stuff into
+    var trialDisplay = $('#trial-display')
+    var numTrials = getNumberOfTrials()
+    // TODO append data about the entire trail to text after the trial has finished
+    if (getGameObject().lives === -1) {
+      $('<div/>').text('number of trials: ' + numTrials).appendTo(trialDisplay)
+    }
   }
 
   function saveToDatabase () {

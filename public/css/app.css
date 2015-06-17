@@ -23,4 +23,11 @@ body {
 
 }
 
+#trial-display{
+  background-color: lightblue;
+  height: 560px;
+  width: 320px;
+  float:right;
+}
+
 
