@@ -105,8 +105,8 @@
     var gameState = getGameStateNow();
     var keysToPress = getKeysToPress(gameState);
     pressKeys(keysToPress);
-    printToNeatoConsole(gameState, keysToPress);
-    saveToDatabase(gameState, keysToPress);
+    // printToNeatoConsole(gameState, keysToPress);
+    // saveToDatabase(gameState, keysToPress);
     setTimeout(function() {
       if (gameShouldContinueBeingPlayed()) {
         tick(gameDeferred);
@@ -141,9 +141,9 @@
   function printToNeatoConsole() {
     var trialDisplay = $('#trial-display');
     var numTrials = getNumberOfTrials();
-    if (getGameObject().lives === -1) {
-      $('<div/>').text('Hello').appendTo(trialDisplay);
-    }
+    // if (getGameObject().lives === -1) {
+      trialDisplay.text('Hello');
+//    }
   }
 
   function saveToDatabase() {
@@ -151,24 +151,36 @@
   }
 
   function getGameStateNow() {
-    return {}; // all game state in this object
+    var gameObj = getGameObject().sprites;
+    var gameState = [
+    ];
+    var shipPosX = gameObj[0].x;
+    var shipPosY = gameObj[0].y;
+    var shipVelX = gameObj[0].vel.x;
+    var shipVelY = gameObj[0].vel.y;
+    gameObj.forEach(function(sprite) {
+      if (sprite.name === "asteroid") {
+        gameState.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY]);
+      }
+    });
+    console.log(gameState);
+    return []; // all game state in this object
   }
 
   function getKeysToPress(gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
-    var keysToPress = [];
-    if (Math.random() > 0.5) {
-      keysToPress.push(32);
-    }
-    if (Math.random() > 0.5) {
-      keysToPress.push(37);
-    }
-    if (Math.random() > 0.5) {
-      keysToPress.push(38);
-    }
-    if (Math.random() > 0.05) {
-      keysToPress.push(39);
-    }
+    // if (Math.random() > 0.5) {
+    //   keysToPress.push(32);
+    // }
+    // if (Math.random() > 0.5) {
+    //   keysToPress.push(37);
+    // }
+    // if (Math.random() > 0.5) {
+    //   keysToPress.push(38);
+    // }
+    // if (Math.random() > 0.05) {
+    //   keysToPress.push(39);
+    // }
     return keysToPress;
   }
 
