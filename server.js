@@ -1,6 +1,9 @@
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var objectId = require('mongodb').ObjectID;
+var url = 'mongodb://localhost:27017/test';
+
+
 var express = require('express')
 var app = express()
 app.use(express.static('public'))

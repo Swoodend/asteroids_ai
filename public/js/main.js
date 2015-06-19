@@ -85,7 +85,7 @@ function startGame () {
 function endGame () {
   releaseKeys()
   var numTrials = getNumberOfTrials()
-  printToNeatoConsole('hello ' + numTrials)
+  printToNeatoConsole(numTrials)
 }
 
 function pressSpacebar () {
@@ -143,7 +143,7 @@ function pressKeys (keysToPress) {
 
 function printToNeatoConsole (message) {
   var trialDisplay = $('#trial-display')
-  $('<div/>').text(message).appendTo(trialDisplay)
+  $('#data-display').text(message);
 }
 
 function saveToDatabase () {
