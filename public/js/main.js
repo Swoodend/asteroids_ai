@@ -1,4 +1,4 @@
-// (function () {
+(function () {
 $(function () {
   $('#start-button').on('click', function () {
     $(this).attr('disabled', true)
@@ -152,19 +152,21 @@ function saveToDatabase () {
 
 function getGameStateNow() {
     var gameObj = getGameObject().sprites;
-    var gameState = [
-    ];
+    var gameState = {
+      deadlies: []
+    };
     var shipPosX = gameObj[0].x;
     var shipPosY = gameObj[0].y;
     var shipVelX = gameObj[0].vel.x;
     var shipVelY = gameObj[0].vel.y;
     gameObj.forEach(function(sprite) {
-      if (sprite.name === "asteroid") {
-        gameState.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY]);
+      if ((sprite.name === 'asteroid' || sprite.name === 'bigalien') && sprite.visible === true) {
+        gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, true]);
+      } else if (sprite.name === 'alienbullet' && sprite.visible === true) {
+          gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, false]);
       }
     });
-    console.log(gameState);
-    return []; // all game state in this object
+    return gameState; // all game state in this object
   }
 
 function getKeysToPress (gameState) {
@@ -193,4 +195,4 @@ function getAiId () {
   return 1
 }
 
-// })()
+})()
