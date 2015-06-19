@@ -29,3 +29,7 @@ body {
   width: 320px;
   float:right;
 }
+
+iframe{
+  border: 0 none;
+}
