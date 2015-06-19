@@ -2,28 +2,28 @@
 $(function () {
   $('#start-button').on('click', function () {
     $(this).attr('disabled', true)
-    startTrials()
+    startTrials();
   })
 })
 
 function startTrials () {
-  runTrials(getNumberOfTrials())
+  runTrials(getNumberOfTrials());
 }
 
 function getNumberOfTrials () {
-  return 1
+  return 1;
 }
 
 function runTrials (numberOfTrials) {
   loadGameIntoIframe().done(function () {
     startGame().done(function () {
-      endGame()
-      numberOfTrials--
+      endGame();
+      numberOfTrials--;
       if (numberOfTrials > 0) {
-        runTrials(numberOfTrials)
+        runTrials(numberOfTrials);
 
       } else {
-        endTrials()
+        endTrials();
       }
     })
   })
@@ -36,35 +36,35 @@ function endTrials () {
 }
 
 function loadGameIntoIframe () {
-  var d = $.Deferred()
+  var d = $.Deferred();
   getGameWindow().location.reload()
   $(getGameFrame()).on('load', function () {
     // TODO needs to wait until game is ready
-    d.resolve()
+    d.resolve();
   })
   // load game into iframe and then resolve the deferred
   // $(getGameFrame()).on('load', d.resolve.bind(d))
-  return d
+  return d;
 }
 
 var gameWindow
 function getGameWindow () {
   if (!gameWindow) {
-    gameWindow = getGameFrame().contentWindow
+    gameWindow = getGameFrame().contentWindow;
   }
-  return gameWindow
+  return gameWindow;
 }
 
 function getGameJquery () {
-  return getGameVar('jQuery')
+  return getGameVar('jQuery');
 }
 
 function getGameObject () {
-  return getGameVar('Game')
+  return getGameVar('Game');
 }
 
 function getGameVar (varName) {
-  return getGameWindow()[varName]
+  return getGameWindow()[varName];
 }
 
 var gameFrame
@@ -72,20 +72,22 @@ function getGameFrame () {
   if (!gameFrame) {
     gameFrame = frames['game-frame']
   }
-  return gameFrame
+  return gameFrame;
 }
-
+var gameId;
+var gameTime;
 function startGame () {
-  pressSpacebar()
-  var g = $.Deferred()
-  tick(g)
-  return g
+  gameId = (new Date()).getTime();
+  gameTime = (new Date()).getTime();
+  pressSpacebar();
+  var g = $.Deferred();
+  tick(g);
+  return g;
 }
 
 function endGame () {
   releaseKeys()
   var numTrials = getNumberOfTrials()
-  printToNeatoConsole(numTrials)
 }
 
 function pressSpacebar () {
@@ -108,7 +110,7 @@ function tick (gameDeferred) {
   var gameState = getGameStateNow()
   var keysToPress = getKeysToPress(gameState)
   pressKeys(keysToPress)
-  // printToNeatoConsole(gameState, keysToPress)
+  printToNeatoConsole(gameState, keysToPress)
   saveToDatabase(gameState, keysToPress)
   setTimeout(function () {
     if (gameShouldContinueBeingPlayed()) {
@@ -119,7 +121,7 @@ function tick (gameDeferred) {
   }, getTickDuration())
 }
 
-var defaultTickDuration = 1000 / 50
+var defaultTickDuration = 5000
 function getTickDuration () {
   return defaultTickDuration
 }
@@ -142,12 +144,29 @@ function pressKeys (keysToPress) {
 }
 
 function printToNeatoConsole (message) {
-  var trialDisplay = $('#trial-display')
-  $('#data-display').text(message);
+  
 }
 
-function saveToDatabase () {
-  // TODO
+function saveToDatabase (gameState, keysToPress) {
+  
+  var obj = {
+    gameState: gameState,
+    keysPressed: keysToPress,
+    gameId: getGameId(),
+    aiId: getAiId(),
+    gameScore: getGameScore(),
+    gameTime: getGameTime()
+  };
+
+  $.ajax({
+    type: 'POST',
+    url: '/data/save',
+    data: JSON.stringify(obj),
+    success: function(){
+      console.log('success response');
+    }
+  })
+
 }
 
 function getGameStateNow() {
@@ -163,8 +182,7 @@ function getGameStateNow() {
         gameState.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY]);
       }
     });
-    console.log(gameState);
-    return []; // all game state in this object
+    return gameState; // all game state in this object
   }
 
 function getKeysToPress (gameState) {
@@ -186,11 +204,20 @@ function getKeysToPress (gameState) {
 }
 
 function getGameId () {
-  return 1
+  return gameId; //should change every trial
 }
 
 function getAiId () {
-  return 1
+  return 1 //has to go into database
+}
+
+function getGameScore(){
+  return getGameObject().score;
+
+}
+
+function getGameTime(){
+  return (new Date()).getTime() - gameTime;
 }
 
 // })()
