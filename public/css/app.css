@@ -17,10 +17,15 @@ body {
   background-color: red;
   position: relative;
   top: 25%;
-  left: 25%;  
+  left: 25%;
   bottom: 0;
   right: 0;
 
 }
 
-
+#trial-display{
+  background-color: lightblue;
+  height: 560px;
+  width: 320px;
+  float:right;
+}
