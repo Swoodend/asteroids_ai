@@ -165,20 +165,22 @@
   }
 
   function getGameStateNow() {
-      var gameObj = getGameObject().sprites;
-      var gameState = [
-      ];
-      var shipPosX = gameObj[0].x;
-      var shipPosY = gameObj[0].y;
-      var shipVelX = gameObj[0].vel.x;
-      var shipVelY = gameObj[0].vel.y;
-      gameObj.forEach(function(sprite) {
-        if (sprite.name === "asteroid") {
-          gameState.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY]);
-        }
-      });
-      return gameState; // all game state in this object
-    }
+    var gameObj = getGameObject().sprites;
+    var gameState = {
+      deadlies: []
+      };
+    var shipPosX = gameObj[0].x;
+    var shipPosY = gameObj[0].y;
+    var shipVelX = gameObj[0].vel.x;
+    var shipVelY = gameObj[0].vel.y;
+    gameObj.forEach(function(sprite) {
+      if ((sprite.name === 'asteroid' || sprite.name === 'bigalien') && sprite.visible === true) {
+        gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVe→
+          } else if (sprite.name === 'alienbullet' && sprite.visible === true) {
+              gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - ship→
+            }
+            });
+              return gameState; // all game state in this object   ])}])}})}
 
   function getKeysToPress (gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
