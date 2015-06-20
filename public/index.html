@@ -2,16 +2,20 @@
 <html>
 <head>
   <title></title>
-  <link rel="stylesheet" href="/css/app.css"/>
+  <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
-  <h1>AI PAGE STUFF</h1>
-  <p><button id="start-button">START TRIALS</button></p>
-  <iframe id="game-frame" src="/HTML5-Asteroids/index.html" width="800" height="560"></iframe>
-  <div id="trial-display"></div>
-  <div id="joystick-base" class="mv-right">
-    <div id="joystick" class="mv-right"></div>
+
+  <div id="nav">
+    <a href="/" class="brand">pewpewpew.js</a>
   </div>
+  <div id="overview">
+    <p><button id="start-button">Start Trials</button></p>
+  </div>
+  <div id="details">
+  </div>
+  <iframe id="game-frame" src="/HTML5-Asteroids/index.html" width="800" height="560"></iframe>
+
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/jquery/dist/jquery.js"></script>
@@ -20,3 +24,4 @@
   <script src="/js/main.js"></script>
 </body>
 </html>
+

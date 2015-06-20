@@ -1,35 +1,53 @@
 body {
-  position: relative;
-}
-#joystick-base{
-  height: 150px;
-  width: 150px;
-  background-color: black;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
-
-#joystick{
-  height: 75px;
-  width: 75px;
-  border-radius: 50%;
-  background-color: red;
-  position: relative;
-  top: 25%;
-  left: 25%;
-  bottom: 0;
-  right: 0;
+  background: #3A3A3C;
+  color: #fff;
+  font-family: Arial, sans-serif;
 
 }
 
-#trial-display{
-  background-color: lightblue;
-  height: 560px;
-  width: 320px;
-  float:right;
-}
-
-iframe{
+iframe {
   border: 0 none;
+}
+
+#details {
+  bottom: 0;
+  left: 800px;
+  position: fixed;
+  right: 0;
+  height: 560px;
+
+}
+
+#game-frame {
+  bottom: 0;
+  height: 560px;
+  left: 0;
+  position: fixed;
+  width: 800px;
+}
+
+#nav {
+  background-color: #4A4A4C;
+  height: 50px;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+#nav .brand {
+  color: #fff;
+  font-size: 120%;
+  font-weight: bold;
+  line-height: 50px;
+  padding: 0 10px;
+  text-decoration: none;
+}
+
+#overview {
+  bottom: 560px;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 50px;
 }
