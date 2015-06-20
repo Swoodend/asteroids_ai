@@ -3,10 +3,10 @@
   socket.on('connect', initialize);
   
   function initialize () {
-    $('#start-button').on('click', function () {
-      $(this).attr('disabled', true)
-      startTrials();
+    $.subscribe('tick', function(e, obj){
+      pressKeys(obj.keysPressed);
     })
+    $.subscribe('startTrials', startTrials);
   }
 
   function startTrials () {
@@ -34,7 +34,7 @@
   function endTrials () {
     // TODO clean things up
     // add start trial button back
-    $('#start-button').removeAttr('disabled')
+    $.publish('endTrials');
   }
 
   function loadGameIntoIframe () {
@@ -88,8 +88,8 @@
   }
 
   function endGame () {
-    releaseKeys()
-    var numTrials = getNumberOfTrials()
+    releaseKeys(previouslyPressedKeys);
+    var numTrials = getNumberOfTrials();
   }
 
   function pressSpacebar () {
@@ -111,9 +111,15 @@
   function tick (gameDeferred) {
     var gameState = getGameStateNow()
     var keysToPress = getKeysToPress(gameState)
-    pressKeys(keysToPress)
-    printToNeatoConsole(gameState, keysToPress)
-    saveToDatabase(gameState, keysToPress)
+    var obj = {
+      gameState: gameState,
+      keysPressed: keysToPress,
+      gameId: getGameId(),
+      aiId: getAiId(),
+      gameScore: getGameScore(),
+      gameTime: getGameTime()
+    };
+    $.publish('tick', obj);
     setTimeout(function () {
       if (gameShouldContinueBeingPlayed()) {
         tick(gameDeferred)
@@ -132,17 +138,17 @@
     return getGameObject().lives != -1
   }
 
-  var previouslyPressedKeys
-  function releaseKeys () {
-    if (previouslyPressedKeys) {
-      previouslyPressedKeys.forEach(releaseKey)
-    }
-  }
-
+  var previouslyPressedKeys;
   function pressKeys (keysToPress) {
-    releaseKeys()
+    if (previouslyPressedKeys) {
+      releaseKeys(previouslyPressedKeys);
+    }
     keysToPress.forEach(pressKey)
     previouslyPressedKeys = keysToPress; // last line
+  }
+
+  function releaseKeys(keysToRelease) {
+    keysToRelease.forEach(releaseKey);
   }
 
   function printToNeatoConsole (message) {
@@ -151,14 +157,6 @@
 
   function saveToDatabase (gameState, keysToPress) {
     
-    var obj = {
-      gameState: gameState,
-      keysPressed: keysToPress,
-      gameId: getGameId(),
-      aiId: getAiId(),
-      gameScore: getGameScore(),
-      gameTime: getGameTime()
-    };
 
     socket.emit('save data', obj);
 
@@ -168,36 +166,48 @@
     var gameObj = getGameObject().sprites;
     var gameState = {
       deadlies: []
-      };
+    };
     var shipPosX = gameObj[0].x;
     var shipPosY = gameObj[0].y;
     var shipVelX = gameObj[0].vel.x;
     var shipVelY = gameObj[0].vel.y;
     gameObj.forEach(function(sprite) {
       if ((sprite.name === 'asteroid' || sprite.name === 'bigalien') && sprite.visible === true) {
-        gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVe→
-          } else if (sprite.name === 'alienbullet' && sprite.visible === true) {
-              gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - ship→
-            }
-            });
-              return gameState; // all game state in this object   ])}])}})}
+        gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, true]);
+      } else if (sprite.name === 'alienbullet' && sprite.visible === true) {
+        gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, false]);
+      }
+    });
+    return gameState; // all game state in this object
+  }
 
-  function getKeysToPress (gameState) {
+  function getKeysToPress(gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
-    var keysToPress = []
-    if (Math.random() > 0.5) {
-      keysToPress.push(32)
+    var keysToPress = [];    
+    keysToPress.push(32);
+    if (shouldAccelerate(gameState)) {
+      keysToPress.push(38);
     }
-    if (Math.random() > 0.5) {
-      keysToPress.push(37)
+    if (shouldTurn(gameState)) {
+      if (shouldTurnClockWise(gameState)) {
+        keysToPress.push(39);
+      } else {
+        keysToPress.push(37);
+      }
     }
-    if (Math.random() > 0.5) {
-      keysToPress.push(38)
-    }
-    if (Math.random() > 0.05) {
-      keysToPress.push(39)
-    }
-    return keysToPress
+    return keysToPress;
+  }
+
+  function shouldAccelerate(gameState) {
+    return Math.random() > 0.5;
+  }
+
+  function shouldTurn(gameState) {
+    return Math.random() > 0.5;
+  }
+
+  function shouldTurnClockWise(gameState) {
+    return Math.random() > 0.5;
   }
 
   function getGameId () {
