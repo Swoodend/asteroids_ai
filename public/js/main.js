@@ -1,11 +1,11 @@
 (function () {
   var socket = io();
   socket.on('connect', initialize);
-  
+
   function initialize () {
     $.subscribe('tick', function(e, obj){
       pressKeys(obj.keysPressed);
-    })
+    });
     $.subscribe('startTrials', startTrials);
   }
 
@@ -27,8 +27,8 @@
         } else {
           endTrials();
         }
-      })
-    })
+      });
+    });
   }
 
   function endTrials () {
@@ -39,17 +39,17 @@
 
   function loadGameIntoIframe () {
     var d = $.Deferred();
-    getGameWindow().location.reload()
+    getGameWindow().location.reload();
     $(getGameFrame()).on('load', function () {
       // TODO needs to wait until game is ready
       d.resolve();
-    })
+    });
     // load game into iframe and then resolve the deferred
     // $(getGameFrame()).on('load', d.resolve.bind(d))
     return d;
   }
 
-  var gameWindow
+  var gameWindow;
   function getGameWindow () {
     if (!gameWindow) {
       gameWindow = getGameFrame().contentWindow;
@@ -69,10 +69,10 @@
     return getGameWindow()[varName];
   }
 
-  var gameFrame
+  var gameFrame;
   function getGameFrame () {
     if (!gameFrame) {
-      gameFrame = frames['game-frame']
+      gameFrame = frames['game-frame'];
     }
     return gameFrame;
   }
@@ -93,24 +93,24 @@
   }
 
   function pressSpacebar () {
-    pressKey(32)
+    pressKey(32);
   }
 
   function pressKey (keyCode) {
-    var e = getGameJquery().Event('keydown')
-    e.keyCode = keyCode
-    getGameJquery()(getGameWindow()).trigger(e)
+    var e = getGameJquery().Event('keydown');
+    e.keyCode = keyCode;
+    getGameJquery()(getGameWindow()).trigger(e);
   }
 
   function releaseKey (keyCode) {
-    var e = getGameJquery().Event('keyup')
-    e.keyCode = keyCode
-    getGameJquery()(getGameWindow()).trigger(e)
+    var e = getGameJquery().Event('keyup');
+    e.keyCode = keyCode;
+    getGameJquery()(getGameWindow()).trigger(e);
   }
 
   function tick (gameDeferred) {
-    var gameState = getGameStateNow()
-    var keysToPress = getKeysToPress(gameState)
+    var gameState = getGameStateNow();
+    var keysToPress = getKeysToPress(gameState);
     var obj = {
       gameState: gameState,
       keysPressed: keysToPress,
@@ -122,20 +122,20 @@
     $.publish('tick', obj);
     setTimeout(function () {
       if (gameShouldContinueBeingPlayed()) {
-        tick(gameDeferred)
+        tick(gameDeferred);
       } else {
-        gameDeferred.resolve()
+        gameDeferred.resolve();
       }
-    }, getTickDuration())
+    }, getTickDuration());
   }
 
   var defaultTickDuration = 100;
   function getTickDuration () {
-    return defaultTickDuration
+    return defaultTickDuration;
   }
 
   function gameShouldContinueBeingPlayed () {
-    return getGameObject().lives != -1
+    return getGameObject().lives != -1;
   }
 
   var previouslyPressedKeys;
@@ -143,7 +143,7 @@
     if (previouslyPressedKeys) {
       releaseKeys(previouslyPressedKeys);
     }
-    keysToPress.forEach(pressKey)
+    keysToPress.forEach(pressKey);
     previouslyPressedKeys = keysToPress; // last line
   }
 
@@ -152,14 +152,10 @@
   }
 
   function printToNeatoConsole (message) {
-    
   }
 
   function saveToDatabase (gameState, keysToPress) {
-    
-
     socket.emit('save data', obj);
-
   }
 
   function getGameStateNow() {
@@ -173,9 +169,9 @@
     var shipVelY = gameObj[0].vel.y;
     gameObj.forEach(function(sprite) {
       if ((sprite.name === 'asteroid' || sprite.name === 'bigalien') && sprite.visible === true) {
-        gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, true]);
+        gameState.deadlies.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, true]);
       } else if (sprite.name === 'alienbullet' && sprite.visible === true) {
-        gameState['deadlies'].push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, false]);
+        gameStatedeadlies.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, false]);
       }
     });
     return gameState; // all game state in this object
@@ -183,7 +179,7 @@
 
   function getKeysToPress(gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
-    var keysToPress = [];    
+    var keysToPress = [];
     keysToPress.push(32);
     if (shouldAccelerate(gameState)) {
       keysToPress.push(38);
@@ -215,7 +211,7 @@
   }
 
   function getAiId () {
-    return 1 //has to go into database
+    return 1; //has to go into database
   }
 
   function getGameScore(){
@@ -227,4 +223,4 @@
     return (new Date()).getTime() - gameTime;
   }
 
-})()
+})();
