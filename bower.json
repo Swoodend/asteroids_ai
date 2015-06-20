@@ -7,6 +7,7 @@
   ],
   "dependencies": {
     "HTML5-Asteroids": "https://github.com/dmcinnes/HTML5-Asteroids.git",
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "jquery-tiny-pubsub": "cowboy/jquery-tiny-pubsub#~0.7.0"
   }
 }

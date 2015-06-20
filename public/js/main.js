@@ -3,10 +3,10 @@
   socket.on('connect', initialize);
   
   function initialize () {
-    $('#start-button').on('click', function () {
-      $(this).attr('disabled', true)
-      startTrials();
+    $.subscribe('tick', function(e, obj){
+      pressKeys(obj.keysPressed);
     })
+    $.subscribe('startTrials', startTrials);
   }
 
   function startTrials () {
@@ -34,7 +34,7 @@
   function endTrials () {
     // TODO clean things up
     // add start trial button back
-    $('#start-button').removeAttr('disabled')
+    $.publish('endTrials');
   }
 
   function loadGameIntoIframe () {
@@ -111,9 +111,15 @@
   function tick (gameDeferred) {
     var gameState = getGameStateNow()
     var keysToPress = getKeysToPress(gameState)
-    pressKeys(keysToPress)
-    printToNeatoConsole(gameState, keysToPress)
-    saveToDatabase(gameState, keysToPress)
+    var obj = {
+      gameState: gameState,
+      keysPressed: keysToPress,
+      gameId: getGameId(),
+      aiId: getAiId(),
+      gameScore: getGameScore(),
+      gameTime: getGameTime()
+    };
+    $.publish('tick', obj);
     setTimeout(function () {
       if (gameShouldContinueBeingPlayed()) {
         tick(gameDeferred)
@@ -132,15 +138,11 @@
     return getGameObject().lives != -1
   }
 
-  var previouslyPressedKeys
-  function releaseKeys () {
+  var previouslyPressedKeys;
+  function pressKeys (keysToPress) {
     if (previouslyPressedKeys) {
       previouslyPressedKeys.forEach(releaseKey)
     }
-  }
-
-  function pressKeys (keysToPress) {
-    releaseKeys()
     keysToPress.forEach(pressKey)
     previouslyPressedKeys = keysToPress; // last line
   }
@@ -151,14 +153,6 @@
 
   function saveToDatabase (gameState, keysToPress) {
     
-    var obj = {
-      gameState: gameState,
-      keysPressed: keysToPress,
-      gameId: getGameId(),
-      aiId: getAiId(),
-      gameScore: getGameScore(),
-      gameTime: getGameTime()
-    };
 
     socket.emit('save data', obj);
 
@@ -185,20 +179,20 @@
 
   function getKeysToPress (gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
-    var keysToPress = []
+    var keysToPress = [];
     if (Math.random() > 0.5) {
-      keysToPress.push(32)
+      keysToPress.push(32);
     }
     if (Math.random() > 0.5) {
-      keysToPress.push(37)
+      keysToPress.push(37);
     }
     if (Math.random() > 0.5) {
-      keysToPress.push(38)
+      keysToPress.push(38);
     }
     if (Math.random() > 0.05) {
-      keysToPress.push(39)
+      keysToPress.push(39);
     }
-    return keysToPress
+    return keysToPress;
   }
 
   function getGameId () {
