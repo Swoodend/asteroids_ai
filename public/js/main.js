@@ -88,8 +88,8 @@
   }
 
   function endGame () {
-    releaseKeys()
-    var numTrials = getNumberOfTrials()
+    releaseKeys(previouslyPressedKeys);
+    var numTrials = getNumberOfTrials();
   }
 
   function pressSpacebar () {
@@ -141,10 +141,14 @@
   var previouslyPressedKeys;
   function pressKeys (keysToPress) {
     if (previouslyPressedKeys) {
-      previouslyPressedKeys.forEach(releaseKey)
+      releaseKeys(previouslyPressedKeys);
     }
     keysToPress.forEach(pressKey)
     previouslyPressedKeys = keysToPress; // last line
+  }
+
+  function releaseKeys(keysToRelease) {
+    keysToRelease.forEach(releaseKey);
   }
 
   function printToNeatoConsole (message) {
@@ -177,22 +181,33 @@
     return gameState; // all game state in this object
   }
 
-  function getKeysToPress (gameState) {
+  function getKeysToPress(gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
-    var keysToPress = [];
-    if (Math.random() > 0.5) {
-      keysToPress.push(32);
-    }
-    if (Math.random() > 0.5) {
-      keysToPress.push(37);
-    }
-    if (Math.random() > 0.5) {
+    var keysToPress = [];    
+    keysToPress.push(32);
+    if (shouldAccelerate(gameState)) {
       keysToPress.push(38);
     }
-    if (Math.random() > 0.05) {
-      keysToPress.push(39);
+    if (shouldTurn(gameState)) {
+      if (shouldTurnClockWise(gameState)) {
+        keysToPress.push(39);
+      } else {
+        keysToPress.push(37);
+      }
     }
     return keysToPress;
+  }
+
+  function shouldAccelerate(gameState) {
+    return Math.random() > 0.5;
+  }
+
+  function shouldTurn(gameState) {
+    return Math.random() > 0.5;
+  }
+
+  function shouldTurnClockWise(gameState) {
+    return Math.random() > 0.5;
   }
 
   function getGameId () {
