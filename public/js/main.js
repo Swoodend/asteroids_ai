@@ -1,7 +1,7 @@
 (function () {
   var socket = io();
   socket.on('connect', initialize);
-  
+
   function initialize () {
     $.subscribe('tick', function(e, obj){
       pressKeys(obj.keysPressed);
@@ -80,6 +80,7 @@
   var gameTime;
   function startGame () {
     gameId = (new Date()).getTime();
+    $.publish('gameStarted', gameId);
     gameTime = (new Date()).getTime();
     pressSpacebar();
     var g = $.Deferred();
@@ -88,6 +89,7 @@
   }
 
   function endGame () {
+    $.publish('gamEnded', gameId);
     releaseKeys(previouslyPressedKeys);
     var numTrials = getNumberOfTrials();
   }
@@ -152,11 +154,11 @@
   }
 
   function printToNeatoConsole (message) {
-    
+
   }
 
   function saveToDatabase (gameState, keysToPress) {
-    
+
 
     socket.emit('save data', obj);
 
@@ -183,7 +185,7 @@
 
   function getKeysToPress(gameState) {
     // TODO (this could be very long, perhaps put in seperate file)
-    var keysToPress = [];    
+    var keysToPress = [];
     keysToPress.push(32);
     if (shouldAccelerate(gameState)) {
       keysToPress.push(38);

@@ -21,6 +21,14 @@ iframe {
   min-height: 768px;
 }
 
+#controls {
+  position: absolute;
+  right: 0;
+  left: 800px;
+  top: 0;
+  bottom: 0;
+}
+
 #details {
   bottom: 0;
   left: 800px;
@@ -69,5 +77,5 @@ iframe {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  width: 800px;
 }
