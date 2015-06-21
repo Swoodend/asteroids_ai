@@ -7,12 +7,24 @@ body {
 
 iframe {
   border: 0 none;
+  -webkit-filter: invert(1);
+  filter: invert(1);
+}
+
+#container {
+  position: fixed;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-width: 1024px;
+  min-height: 768px;
 }
 
 #details {
   bottom: 0;
   left: 800px;
-  position: fixed;
+  position: absolute;
   right: 0;
   height: 560px;
 
@@ -22,7 +34,7 @@ iframe {
   bottom: 0;
   height: 560px;
   left: 0;
-  position: fixed;
+  position: absolute;
   width: 800px;
 }
 
@@ -30,7 +42,7 @@ iframe {
   background-color: #4A4A4C;
   height: 50px;
   left: 0;
-  position: fixed;
+  position: absolute;
   right: 0;
   top: 0;
 }
@@ -47,7 +59,15 @@ iframe {
 #overview {
   bottom: 560px;
   left: 0;
-  position: fixed;
+  position: absolute;
   right: 0;
   top: 50px;
+}
+
+#overview-chart {
+  bottom: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 }

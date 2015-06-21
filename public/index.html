@@ -5,23 +5,28 @@
   <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
-
+<div id="container">
   <div id="nav">
     <a href="/" class="brand">pewpewpew.js</a>
   </div>
   <div id="overview">
-    <p><button id="start-button">Start Trials</button></p>
+    <div id="overview-chart"></div>
+    <p>
+      <button id="start-button">Start Trials</button>
+    </p>
   </div>
   <div id="details">
   </div>
   <iframe id="game-frame" src="/HTML5-Asteroids/index.html" width="800" height="560"></iframe>
+</div>
 
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/jquery/dist/jquery.js"></script>
-  <script src="/jquery-tiny-pubsub/dist/ba-tiny-pubsub.js"></script>
-  <script src="/js/trial_ui.js"></script>
-  <script src="/js/main.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/jquery/dist/jquery.js"></script>
+<script src="/jquery-tiny-pubsub/dist/ba-tiny-pubsub.js"></script>
+<script src="/highcharts-release/highcharts.js"></script>
+<script src="/highcharts-release/themes/dark-unica.js"></script>
+<script src="/js/trial_ui.js"></script>
+<script src="/js/main.js"></script>
 </body>
 </html>
 
