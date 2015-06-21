@@ -89,7 +89,7 @@
   }
 
   function endGame () {
-    $.publish('gamEnded', gameId);
+    $.publish('gameEnded', gameId);
     releaseKeys(previouslyPressedKeys);
     var numTrials = getNumberOfTrials();
   }

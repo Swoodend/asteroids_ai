@@ -75,6 +75,13 @@ iframe {
   width: 800px;
 }
 
+#joystick {
+  zoom: 75%;
+  position: absolute;
+  left:0;
+  bottom: 10px;
+}
+
 #nav {
   background-color: #4A4A4C;
   height: 50px;
