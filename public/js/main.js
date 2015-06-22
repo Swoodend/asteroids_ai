@@ -80,6 +80,7 @@
   var gameTime;
   function startGame () {
     gameId = (new Date()).getTime();
+    $.publish('gameStarted', gameId);
     gameTime = (new Date()).getTime();
     pressSpacebar();
     var g = $.Deferred();
@@ -88,6 +89,7 @@
   }
 
   function endGame () {
+    $.publish('gameEnded', gameId);
     releaseKeys(previouslyPressedKeys);
     var numTrials = getNumberOfTrials();
   }
