@@ -111,7 +111,7 @@
   }
 
   function tick (gameDeferred) {
-    var gameState = getGameStateNow();
+    var gameState = getGameStateNow(getGameObject());
     var keysToPress = getKeysToPress(gameState);
     var obj = {
       gameState: gameState,
@@ -160,8 +160,8 @@
     socket.emit('save data', obj);
   }
 
-  function getGameStateNow() {
-    var gameObj = getGameObject().sprites;
+  function getGameStateNow(gameObject) {
+    var gameObj = gameObject.sprites;
     var gameState = {
       deadlies: []
     };
@@ -173,7 +173,7 @@
       if ((sprite.name === 'asteroid' || sprite.name === 'bigalien') && sprite.visible === true) {
         gameState.deadlies.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, true]);
       } else if (sprite.name === 'alienbullet' && sprite.visible === true) {
-        gameStatedeadlies.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, false]);
+        gameState.deadlies.push([sprite.x - shipPosX, sprite.y - shipPosY, sprite.vel.x - shipVelX, sprite.vel.y - shipVelY, false]);
       }
     });
     return gameState; // all game state in this object
