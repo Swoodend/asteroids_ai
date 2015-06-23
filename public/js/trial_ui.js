@@ -57,14 +57,32 @@
   KEYS[40] = 'down';
   $.subscribe('tick', function (e, gameData) {
     var classNames = ['joystick'];
-    gameData.keysPressed.forEach(function(keyCode){
+    gameData.keysPressed.forEach(function (keyCode) {
       classNames.push(KEYS[keyCode]);
     });
     joystick.className = classNames.join(' ');
   });
 
-  $.subscribe('gameEnded', function(){
+  $.subscribe('gameEnded', function () {
     joystick.className = 'joystick';
+  })
+
+  var shipVel = $('#ship-velocity');
+  var killCheck = $('#kill-count');
+  $.subscribe('tick', function (e, gameData) {
+    var velx = gameData.gameObject.ship.vel.x;
+    var vely = gameData.gameObject.ship.vel.y;
+    var vel = Math.sqrt(velx * velx + vely * vely);
+    shipVel.text('Ship vel: ' + vel);
+  })
+  var ourScore = 0;
+  var killCount = 0;
+  $.subscribe('tick', function(e, gameData){
+    if (gameData.gameScore > ourScore){
+      killCount+=1;
+      ourScore = gameData.gameScore;
+    }
+    killCheck.text('Kill count: ' + killCount);
   })
 
 })();

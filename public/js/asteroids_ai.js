@@ -10,13 +10,16 @@ AsteroidsAi = (function() {
     pressKey(32);
   };
 
+  //this is published every tick
   AiCtor.prototype.onTick = function () {
-    var gameData = extractGameData(getGameObject());
+    var gameObject = getGameObject();
+    var gameData = extractGameData(gameObject);
     var keysToPress = getKeysToPress(gameData);
     pressKeys(keysToPress);
     return {
       gameData: gameData,
-      keysPressed: keysToPress
+      keysPressed: keysToPress,
+      gameObject: gameObject
     };
   };
 
@@ -47,7 +50,7 @@ AsteroidsAi = (function() {
   function extractGameData(gameObject) {
     return {
       score: gameObject.score,
-      sprites: getDeadlies(gameObject),
+      sprites: getDeadlies(gameObject)
     };
   }
 
