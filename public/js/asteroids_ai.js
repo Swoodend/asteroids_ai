@@ -62,9 +62,26 @@ AsteroidsAi = (function() {
     }, []);
   }
 
+  var width = 800;
+  var height = 560;
   function getDeadlyData(ship, sprite, shootable) {
-    var angle = (Math.atan2(sprite.y - ship.y, sprite.x - ship.x) * 180 / Math.PI) - (ship.rot - 90);
-    var distance = Math.sqrt(Math.pow((ship.x - sprite.x), 2) + Math.pow((ship.y - sprite.y), 2));
+    var spriteX = sprite.x;
+    var spriteY = sprite.y;
+    var shipX = ship.x;
+    var shipY = ship.y;
+    var deltaX = spriteX - shipX;
+    var deltaY = spriteY - shipY;
+
+    if (Math.abs(deltaX) > width/2) {
+      deltaX += deltaX > 0 ? -width : width;
+    }
+    if (Math.abs(deltaY) > height/2) {
+      deltaY += deltaY > 0 ? -height : height;
+    }
+
+    var distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((deltaY), 2));
+    var angle = (Math.atan2(deltaY, deltaX) * 180 / Math.PI) - (ship.rot - 90);
+
     return {
       s: shootable,
       d: distance,
