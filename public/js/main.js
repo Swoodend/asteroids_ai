@@ -1,10 +1,13 @@
 (function () {
-  var AI = new AsteroidsAi(getGameWindow())
   var socket = io();
   socket.on('connect', initialize);
 
+  var AI;
   function initialize() {
-    $.subscribe('startTrials', startTrials);
+    $.getJSON('/models/0.json', function(model) {
+      AI = new AsteroidsAi(getGameWindow(), model);
+      $.subscribe('startTrials', startTrials);
+    });
   }
 
   function startTrials() {
@@ -70,7 +73,7 @@
   }
 
   function endGame() {
-    AI.onGameEnd()
+    AI.onGameEnd();
     $.publish('gameEnded', gameId);
   }
 
