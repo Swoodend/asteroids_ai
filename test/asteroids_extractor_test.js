@@ -31,14 +31,14 @@ describe('AsteroidsAi', function() {
   });
 
   it('is a global variable', function() {
-    expect(typeof window.AsteroidsAi).toBe('object');
+    expect(typeof window.gAsteroidsAi).toBe('object');
   });
 
   describe('extractGameData', function() {
     var extractGameData;
 
     beforeEach(function() {
-      extractGameData = window.AsteroidsAi.extractGameData(Game);
+      extractGameData = window.gAsteroidsAi.extractGameData(Game);
     });
 
     it('should extract game score', function() {

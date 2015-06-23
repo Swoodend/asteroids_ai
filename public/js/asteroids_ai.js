@@ -133,6 +133,10 @@ AsteroidsAi = (function() {
     return getGameObject().score;
    }
 
+  window.gAsteroidsAi = {
+    extractGameData: extractGameData
+  };
+
   return AiCtor;
 
 }());
