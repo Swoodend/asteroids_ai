@@ -22,10 +22,10 @@ io.on('connection', function(socket){
     var gameStates = db.collection('game_states');
     socket.on('save data', function(data){
       gameStates.insert(data);
-    })
+    });
     socket.on('disconnect', function(){
       db.close();
-    })  
-  })
-})
+    });
+  });
+});
 
