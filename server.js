@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var mongoUrl = 'mongodb://localhost:27017/test';
+var mongoUrl = 'mongodb://localhost:27017/aidb';
 
 
 var express = require('express');
@@ -19,9 +19,20 @@ io.on('connection', function(socket){
       console.log(err);
       return;
     }
-    var gameStates = db.collection('game_states');
-    socket.on('save data', function(data){
-      gameStates.insert(data);
+    var ticks = db.collection('ticks');
+    socket.on('save tick', function(data){
+      ticks.insert(data);
+    });
+    var games = db.collection('games');
+    socket.on('save game', function(data){
+      games.insert(data);
+    });
+    socket.on('update game', function(data){
+      games.findOneAndUpdate(
+        {gameId: data.gameId},
+        data,
+        {upsert: true}
+        );
     });
     socket.on('disconnect', function(){
       db.close();
