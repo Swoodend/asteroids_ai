@@ -120,8 +120,12 @@ AsteroidsAi = (function() {
   function getKeysToPress(gameState) {
     var keysToPress = [];
     var closestDeadly = getClosestDeadly(gameState.sprites);
-    var angle = 0;
-    var distance = 0;
+    var deadlyAngle = closestDeadly.t;
+    while (deadlyAngle < 0) {
+      deadlyAngle += 360;
+    }
+    var angle = Math.floor(deadlyAngle/config[0].stepSize);
+    var distance = Math.floor(closestDeadly.d/config[1].stepSize);
     var c = gmod[angle][distance];
     keysToPress.push(32);
     if (ACC & c) {
