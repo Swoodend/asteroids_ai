@@ -20,6 +20,7 @@ AsteroidsAi = (function() {
   }
 
   AiCtor.prototype.startGame = function () {
+    AsteroidsEvents.patchGame(getGameWindow());
     pressKey(32);
   };
 

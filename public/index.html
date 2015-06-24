@@ -21,8 +21,10 @@
   <div id="details">
     <div id="joystick" class="joystick"></div>
     <div id="data-display">
-      <div id="ship-velocity"></div>
-      <div id="kill-count"></div>
+      <div id="kill-count">Kill count: 0</div>
+      <div id="bullet-count">Bullet count: 0</div>
+      <div id="speed-gauge"></div>
+      <div id="accuracy">Accuracy: - </div>
     </div>
   </div>
   <iframe id="game-frame" src="/HTML5-Asteroids/index.html" width="800" height="560"></iframe>
@@ -34,6 +36,9 @@
 <script src="/jquery-tiny-pubsub/dist/ba-tiny-pubsub.js"></script>
 <script src="/highcharts-release/highcharts.js"></script>
 <script src="/highcharts-release/themes/dark-unica.js"></script>
+<script src="http://code.highcharts.com/highcharts-more.js"></script>
+<script src="http://code.highcharts.com/modules/solid-gauge.js"></script>
+<script src="/js/asteroids_events.js"></script>
 <script src="/js/asteroids_ai.js"></script>
 <script src="/js/trial_ui.js"></script>
 <script src="/js/main.js"></script>
