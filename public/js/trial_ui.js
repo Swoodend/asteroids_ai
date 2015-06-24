@@ -66,7 +66,10 @@
 
   $.subscribe('gameEnded', function () {
     joystick.className = 'joystick';
+    ourScore = 0;
+    bulletCount = 0;
     killCount = 0;
+    accuracy = 0;
     point.update(0);
   })
 
@@ -92,6 +95,14 @@
   $.subscribe('bulletshot', function () {
     bulletCount += 1;
     shotsFired.text('Bullets fired: ' + bulletCount);
+  })
+
+  var accuracy = 0;
+  var accDiv = $('#accuracy');
+  $.subscribe('tick', function () {
+
+    accDiv.text('Accuracy: ' + (killCount / bulletCount * 100).toFixed(2) + '%');
+
   })
 
   var gaugeOptions = {
@@ -179,8 +190,6 @@
 
   }));
 
-
-
   var chart = $('#speed-gauge').highcharts();
   var point = chart.series[0].points[0];
 
@@ -190,7 +199,7 @@
       var velx = gameData.gameObject.ship.vel.x;
       var vely = gameData.gameObject.ship.vel.y;
       var vel = Math.round((Math.sqrt(velx * velx + vely * vely) * 100));
-    } else{
+    } else {
       vel = 0;
     }
 
