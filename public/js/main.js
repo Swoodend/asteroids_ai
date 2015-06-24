@@ -1,12 +1,40 @@
 (function () {
   var socket = io();
-  socket.on('connect', initialize);
+  socket.once('connect', initialize);
 
   var AI;
   function initialize() {
     $.getJSON('/models/0.json', function(model) {
       AI = new AsteroidsAi(getGameWindow(), model);
       $.subscribe('startTrials', startTrials);
+      $.subscribe('gameStarted', saveGame);
+      $.subscribe('gameEnded', updateGame);
+      $.subscribe('tick', saveTick);
+    });
+  }
+
+  function saveGame(e, gameId, aiId) {
+    socket.emit('save game', {
+      gameId: gameId,
+      aiId: aiId
+    });
+  }
+
+  function updateGame(e, gameId, points) {
+    socket.emit('update game', {
+      gameId: gameId,
+      totalPoints: points,
+      duration: getGameTime()
+    });
+  }
+
+  function saveTick(e, tickData) {
+    socket.emit('save tick', {
+      gameId: tickData.gameId,
+      classification: AsteroidsAi.keysToClassification(tickData.keysPressed),
+      timeRunning: tickData.gameTime,
+      currentScore: tickData.gameScore,
+      deadlies: tickData.gameData.sprites
     });
   }
 
@@ -64,7 +92,7 @@
   var gameTime;
   function startGame() {
     gameId = (new Date()).getTime();
-    $.publish('gameStarted', gameId);
+    $.publish('gameStarted', [gameId, getAiId()]);
     gameTime = (new Date()).getTime();
     AI.startGame(getGameWindow());
     var g = $.Deferred();
@@ -73,8 +101,8 @@
   }
 
   function endGame() {
-    AI.onGameEnd();
-    $.publish('gameEnded', gameId);
+    var gameObject = AI.onGameEnd();
+    $.publish('gameEnded', [gameId, gameObject.score]);
   }
 
   function tick(gameDeferred) {
@@ -95,10 +123,6 @@
   var defaultTickDuration = 100;
   function getTickDuration() {
     return defaultTickDuration;
-  }
-
-  function saveToDatabase (gameState, keysToPress) {
-    socket.emit('save data', obj);
   }
 
   function getGameId() {

@@ -34,6 +34,9 @@ function generateModel(listOfDims, pos, depth) {
   return res;
 }
 
-var model = generateModel(config);
+var model = {
+  config: config,
+  model: generateModel(config)
+};
 
-fs.writeFile('models/0.json', JSON.stringify(model));
+fs.writeFile('public/models/0.json', JSON.stringify(model));

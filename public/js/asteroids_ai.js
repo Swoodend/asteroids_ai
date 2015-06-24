@@ -2,17 +2,6 @@ AsteroidsAi = (function() {
 
   var gwin;
   var gmod;
-  var config = [{
-    name: 'angleToNearestAsteroid',
-    min: 0,
-    max: 359,
-    stepSize: 10,
-   }, {
-    name: 'distanceToNearestAsteroid',
-    min: 0,
-    max: 500,
-    stepSize: 10
-  }];
 
   function AiCtor(gameWindow, model) {
     gwin = gameWindow;
@@ -38,6 +27,7 @@ AsteroidsAi = (function() {
 
   AiCtor.prototype.onGameEnd = function () {
     releaseKeys(previouslyPressedKeys);
+    return getGameObject();
   };
 
   AiCtor.prototype.gameShouldContinueBeingPlayed = function () {
@@ -117,32 +107,54 @@ AsteroidsAi = (function() {
     };
   }
 
-  var ACC = 4;
-  var TURN = 2;
-  var CW = 1;
   function getKeysToPress(gameState) {
-    var keysToPress = [];
     var closestDeadly = getClosestDeadly(gameState.sprites);
     var deadlyAngle = closestDeadly.t;
     while (deadlyAngle < 0) {
       deadlyAngle += 360;
     }
-    var angle = Math.floor(deadlyAngle/config[0].stepSize);
-    var distance = Math.floor(closestDeadly.d/config[1].stepSize);
-    var c = gmod[angle][distance];
+    var angle = Math.floor(deadlyAngle/gmod.config[0].stepSize);
+    var distance = Math.floor(closestDeadly.d/gmod.config[1].stepSize);
+    var c = gmod.model[angle][distance];
+    var keysToPress = AiCtor.classificationsToKeys(c);
     keysToPress.push(32);
+    return keysToPress;
+  }
+
+  var ACC = 4;
+  var TURN = 2;
+  var CW = 1;
+  AiCtor.classificationsToKeys = function(c) {
+    var keysToPress = [];
     if (ACC & c) {
-      keysToPress.push(38);
+      keysToPress.push(UP);
     }
     if (TURN & c) {
       if (CW & c) {
-        keysToPress.push(39);
+        keysToPress.push(RIGHT);
       } else {
-        keysToPress.push(37);
+        keysToPress.push(LEFT);
       }
     }
     return keysToPress;
-  }
+  };
+
+  var UP = 38;
+  var LEFT = 37;
+  var RIGHT = 39;
+  AiCtor.keysToClassification = function(keys) {
+    var c = 0;
+    if (keys.indexOf(RIGHT) != -1) {
+      c += ACC;
+    }
+    if (keys.indexOf(LEFT) != -1 || keys.indexOf(RIGHT) != -1) {
+      c += TURN;
+      if (keys.indexOf(RIGHT) != -1) {
+        c += CW;
+      }
+    }
+    return c;
+  };
 
   function startGame() {
     pressKey(32);
