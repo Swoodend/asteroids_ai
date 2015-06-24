@@ -2,17 +2,6 @@ AsteroidsAi = (function() {
 
   var gwin;
   var gmod;
-  var config = [{
-    name: 'angleToNearestAsteroid',
-    min: 0,
-    max: 359,
-    stepSize: 10,
-   }, {
-    name: 'distanceToNearestAsteroid',
-    min: 0,
-    max: 500,
-    stepSize: 10
-  }];
 
   function AiCtor(gameWindow, model) {
     gwin = gameWindow;
@@ -127,9 +116,9 @@ AsteroidsAi = (function() {
     while (deadlyAngle < 0) {
       deadlyAngle += 360;
     }
-    var angle = Math.floor(deadlyAngle/config[0].stepSize);
-    var distance = Math.floor(closestDeadly.d/config[1].stepSize);
-    var c = gmod[angle][distance];
+    var angle = Math.floor(deadlyAngle/gmod.config[0].stepSize);
+    var distance = Math.floor(closestDeadly.d/gmod.config[1].stepSize);
+    var c = gmod.model[angle][distance];
     keysToPress.push(32);
     if (ACC & c) {
       keysToPress.push(38);
