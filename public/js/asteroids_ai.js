@@ -1,9 +1,22 @@
 AsteroidsAi = (function() {
 
   var gwin;
+  var gmod;
+  var config = [{
+    name: 'angleToNearestAsteroid',
+    min: 0,
+    max: 359,
+    stepSize: 10,
+   }, {
+    name: 'distanceToNearestAsteroid',
+    min: 0,
+    max: 500,
+    stepSize: 10
+  }];
 
-  function AiCtor(gameWindow) {
+  function AiCtor(gameWindow, model) {
     gwin = gameWindow;
+    gmod = model;
   }
 
   AiCtor.prototype.startGame = function () {
@@ -34,15 +47,15 @@ AsteroidsAi = (function() {
     return gwin;
   }
 
-  function getGameJquery () {
+  function getGameJquery() {
     return getGameVar('jQuery');
   }
 
-  function getGameObject () {
+  function getGameObject() {
     return getGameVar('Game');
   }
 
-  function getGameVar (varName) {
+  function getGameVar(varName) {
     return getGameWindow()[varName];
   }
 
@@ -64,8 +77,20 @@ AsteroidsAi = (function() {
     }, []);
   }
 
+  function getClosestDeadly(deadlies) {
+    var closest;
+    for (var i = 0, len = deadlies.length; i < len; i++) {
+      if (closest && closest.d > deadlies[i].d) {
+        closest = deadlies[i];
+      } else {
+        closest = deadlies[i];
+      }
+    }
+    return closest;
+  }
+
   var width = 800;
-  var height = 560;
+  var height = 600;
   function getDeadlyData(ship, sprite, shootable) {
     var spriteX = sprite.x;
     var spriteY = sprite.y;
@@ -91,14 +116,25 @@ AsteroidsAi = (function() {
     };
   }
 
+  var ACC = 4;
+  var TURN = 2;
+  var CW = 1;
   function getKeysToPress(gameState) {
     var keysToPress = [];
+    var closestDeadly = getClosestDeadly(gameState.sprites);
+    var deadlyAngle = closestDeadly.t;
+    while (deadlyAngle < 0) {
+      deadlyAngle += 360;
+    }
+    var angle = Math.floor(deadlyAngle/config[0].stepSize);
+    var distance = Math.floor(closestDeadly.d/config[1].stepSize);
+    var c = gmod[angle][distance];
     keysToPress.push(32);
-    if (shouldAccelerate(gameState)) {
+    if (ACC & c) {
       keysToPress.push(38);
     }
-    if (shouldTurn(gameState)) {
-      if (shouldTurnClockWise(gameState)) {
+    if (TURN & c) {
+      if (CW & c) {
         keysToPress.push(39);
       } else {
         keysToPress.push(37);
@@ -107,23 +143,11 @@ AsteroidsAi = (function() {
     return keysToPress;
   }
 
-  function shouldAccelerate(gameState) {
-    return Math.random() > 0.5;
-  }
-
-  function shouldTurn(gameState) {
-    return Math.random() > 0.5;
-  }
-
-  function shouldTurnClockWise(gameState) {
-    return Math.random() > 0.5;
-  }
-
   function startGame() {
     pressKey(32);
   }
 
-  function pressKey (keyCode) {
+  function pressKey(keyCode) {
     var e = getGameJquery().Event('keydown');
     e.keyCode = keyCode;
     getGameJquery()(getGameWindow()).trigger(e);
@@ -138,7 +162,7 @@ AsteroidsAi = (function() {
     previouslyPressedKeys = keysToPress;
   }
 
-  function releaseKey (keyCode) {
+  function releaseKey(keyCode) {
     var e = getGameJquery().Event('keyup');
     e.keyCode = keyCode;
     getGameJquery()(getGameWindow()).trigger(e);
@@ -148,7 +172,7 @@ AsteroidsAi = (function() {
     keysToRelease.forEach(releaseKey);
   }
 
-  function getGameScore(){
+  function getGameScore() {
     return getGameObject().score;
    }
 
