@@ -31,6 +31,10 @@ iframe {
   filter: invert(1);
 }
 
+#accuracy {
+  color: hotpink;
+}
+
 #container {
   position: absolute;
   bottom: 0;
@@ -39,6 +43,15 @@ iframe {
   right: 0;
   min-width: 1024px;
   min-height: 768px;
+}
+
+.content-value {
+  text-align: center;
+  font-size: 300%;
+}
+
+#bullet-count {
+  color: greenyellow;
 }
 
 #controls {
@@ -67,6 +80,38 @@ iframe {
 
 }
 
+.datapoints {
+  width: 38.196601125%;
+  float: left;
+}
+
+.detail {
+  text-align: center;
+}
+
+
+.detail-content {
+  margin: 8px 10px;
+}
+
+.detail-content .punchy {
+  color: #ffffff;
+  font-size: 68px;
+  letter-spacing: -3px;
+  margin: 0;
+}
+
+.detail-header {
+
+  margin: 2px 10px;
+  padding: 6px;
+}
+
+.visualizations {
+  float: left;
+  width: 61.803398875%;
+}
+
 #game-frame {
   bottom: 0;
   height: 560px;
@@ -76,10 +121,11 @@ iframe {
 }
 
 #joystick {
-  zoom: 75%;
-  position: absolute;
-  left:0;
-  bottom: 10px;
+  zoom: 50%;
+}
+
+#kill-count {
+  color: red;
 }
 
 #nav {
@@ -117,6 +163,8 @@ iframe {
 }
 
 #speed-gauge {
-  width: 200px;
-  height: 200px;
+  height: 250px;
+  margin: -80px auto 0;
+
 }
+
