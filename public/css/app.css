@@ -80,23 +80,15 @@ iframe {
 
 }
 
-.detail {
+.datapoints {
+  width: 38.196601125%;
   float: left;
-  overflow: hidden;
-  width: 50%;
-  height: 220px;
 }
 
-.detail-content.detail-center {
-  position: relative;
-  left: 50%;
-  margin-left: -100px;
-
+.detail {
+  text-align: center;
 }
 
-.detail.detail-simple {
-  width: 33.333333%;
-}
 
 .detail-content {
   margin: 8px 10px;
@@ -110,10 +102,14 @@ iframe {
 }
 
 .detail-header {
-  background: #4A4A4C;
+
   margin: 2px 10px;
   padding: 6px;
-  text-align: center;
+}
+
+.visualizations {
+  float: left;
+  width: 61.803398875%;
 }
 
 #game-frame {
@@ -167,6 +163,8 @@ iframe {
 }
 
 #speed-gauge {
-  width: 200px;
-  height: 200px;
+  height: 250px;
+  margin: -80px auto 0;
+
 }
+

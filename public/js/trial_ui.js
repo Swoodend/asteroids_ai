@@ -10,7 +10,8 @@
 
   var overviewChart = new Highcharts.Chart({
     chart: {
-      renderTo: 'overview-chart'
+      renderTo: 'overview-chart',
+      backgroundColor: 'rgba(0,0,0,0)'
     },
     title: {
       text: 'Trial Graph'
