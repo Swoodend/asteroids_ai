@@ -19,13 +19,53 @@
     </div>
   </div>
   <div id="details">
-    <div id="joystick" class="joystick"></div>
-    <div id="data-display">
-      <div id="kill-count">Kill count: 0</div>
-      <div id="bullet-count">Bullet count: 0</div>
-      <div id="speed-gauge"></div>
-      <div id="accuracy">Accuracy: - </div>
+
+
+    <div class="detail detail-simple">
+      <div class="detail-header">
+        Kill Count
+      </div>
+      <div class="detail-content">
+        <div id="kill-count" class="punchy">0</div>
+      </div>
     </div>
+
+    <div class="detail detail-simple">
+      <div class="detail-header">
+        Bullets Fired
+      </div>
+      <div class="detail-content">
+        <div id="bullet-count" class="punchy">0</div>
+      </div>
+    </div>
+
+    <div class="detail detail-simple">
+      <div class="detail-header">
+        Accuracy
+      </div>
+      <div class="detail-content">
+        <div id="accuracy" class="punchy">&mdash;</div>
+      </div>
+    </div>
+
+    <div class="detail">
+      <div class="detail-header">
+        Speed
+      </div>
+      <div class="detail-content detail-center">
+        <div id="speed-gauge"></div>
+      </div>
+    </div>
+
+    <div class="detail">
+      <div class="detail-header">
+        Movement
+      </div>
+      <div class="detail-content detail-center">
+        <div id="joystick" class="joystick"></div>
+      </div>
+    </div>
+
   </div>
   <iframe id="game-frame" src="/HTML5-Asteroids/index.html" width="800" height="560"></iframe>
 </div>

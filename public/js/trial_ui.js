@@ -79,7 +79,7 @@
     var velx = gameData.gameObject.ship.vel.x;
     var vely = gameData.gameObject.ship.vel.y;
     var vel = Math.sqrt(velx * velx + vely * vely);
-    shipVel.text('Ship vel: ' + vel);
+    shipVel.text(vel);
   })
   var ourScore = 0;
   var killCount = 0;
@@ -88,20 +88,23 @@
       killCount += 1;
       ourScore = gameData.gameScore;
     }
-    killCheck.text('Kill count: ' + killCount);
+    killCheck.text(killCount);
   })
   var bulletCount = 0;
   var shotsFired = $('#bullet-count');
   $.subscribe('bulletshot', function () {
     bulletCount += 1;
-    shotsFired.text('Bullets fired: ' + bulletCount);
+    shotsFired.text(bulletCount);
   })
 
   var accuracy = 0;
   var accDiv = $('#accuracy');
   $.subscribe('tick', function () {
-
-    accDiv.text('Accuracy: ' + (killCount / bulletCount * 100).toFixed(2) + '%');
+    if (bulletCount > 0) {
+      accDiv.text(Math.round((killCount / bulletCount * 100)) + '%');
+    } else  {
+      accDiv.text(0 + '%');
+    }
 
   })
 
@@ -167,7 +170,7 @@
       min: 0,
       max: 1000,
       title: {
-        text: 'Speed'
+        text: ''
       }
     },
 
