@@ -10,8 +10,25 @@ var io = require('socket.io')(http);
 
 app.use(express.static('public'));
 app.use(express.static('bower_components'));
-http.listen(process.env.PORT || 3000);
 
+app.get('/trials', function(req, res){
+  MongoClient.connect(mongoUrl, function(err, db){
+    if (err){
+      res.status(500).send(err);
+      db.close();
+      return;
+    }
+    db.collection('games').find().toArray(function(err, games){
+      if (err){
+        res.status(500).send(err);
+        db.close();
+        return;
+      }
+      res.send(games);
+      db.close();
+    })
+  })
+});
 
 io.on('connection', function(socket){
   MongoClient.connect(mongoUrl, function(err, db){
@@ -39,4 +56,7 @@ io.on('connection', function(socket){
     });
   });
 });
+
+http.listen(process.env.PORT || 3000);
+
 
