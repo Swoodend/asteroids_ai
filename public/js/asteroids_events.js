@@ -1,5 +1,5 @@
 (function () {
-  function patchGame(gameWindow) {
+  function addBulletShotEvent(gameWindow) {
     gameWindow.Game.ship.preMove = function (delta) {
       if (gameWindow.KEY_STATUS.left) {
         this.vel.rot = -6;
@@ -10,7 +10,7 @@
       }
 
       if (gameWindow.KEY_STATUS.up) {
-        var rad = ((this.rot-90) * Math.PI)/180;
+        var rad = ((this.rot - 90) * Math.PI) / 180;
         this.acc.x = 0.5 * Math.cos(rad);
         this.acc.y = 0.5 * Math.sin(rad);
         this.children.exhaust.visible = Math.random() > 0.1;
@@ -53,6 +53,24 @@
       }
     }
   }
+
+  var delay = 1000 / 120;
+  function setUpFastMode(gameWindow){
+
+  }
+
+
+  function patchGame(gameWindow, fastMode) {
+    addBulletShotEvent(gameWindow);
+    if (fastMode){
+      setUpFastMode(gameWindow);
+    }
+  }
+
+
+
+
+
 
   window.AsteroidsEvents = {
     patchGame: patchGame

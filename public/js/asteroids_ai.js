@@ -8,8 +8,8 @@ AsteroidsAi = (function() {
     gmod = model;
   }
 
-  AiCtor.prototype.startGame = function () {
-    AsteroidsEvents.patchGame(getGameWindow());
+  AiCtor.prototype.startGame = function (fastMode) {
+    AsteroidsEvents.patchGame(getGameWindow(), fastMode);
     pressKey(32);
   };
 
