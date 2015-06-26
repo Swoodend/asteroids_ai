@@ -25,10 +25,15 @@ function getClosestDeadly(deadlies) {
   return closest;
 }
 
-function getTicks(gameIds) {
+function getModelData(gameIds) {
+  var points = [];
   for (var i in tickData) {
-    if (tickData[i].gameId === 1435270780852) {
-      console.log(tickData[i]);
+    if (gameIds.indexOf(tickData[i].gameId) != -1) {
+      var closest = getClosestDeadly(tickData[i].deadlies);
+      points.push([closest.d, closest.t, tickData[i].classification]);
     }
   }
+  return points;
 }
+
+console.log(getModelData(getBestGameIds(gameData)));

@@ -130,7 +130,7 @@
   }
 
   function getAiId() {
-    if (location.indexOf('ai') != -1) {
+    if (location.search.indexOf('ai') != -1) {
       var num = location.search.match(/\d/g);
       num = num.join('');
       return num;
