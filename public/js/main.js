@@ -4,7 +4,7 @@
 
   var AI;
   function initialize() {
-    $.getJSON('/models/0.json', function(model) {
+    $.getJSON('/models/' + getAiId() + '.json', function(model) {
       AI = new AsteroidsAi(getGameWindow(), model);
       $.subscribe('startTrials', startTrials);
       $.subscribe('gameStarted', saveGame);
@@ -130,7 +130,13 @@
   }
 
   function getAiId() {
-    return 1;
+    if (location.indexOf('ai') != -1) {
+      var num = location.search.match(/\d/g);
+      num = num.join('');
+      return num;
+    } else {
+      return 0;
+    }
   }
 
   function getGameTime() {

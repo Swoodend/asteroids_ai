@@ -16,11 +16,9 @@ function getBestGameIds(gameData) {
 }
 
 function getClosestDeadly(deadlies) {
-  var closest;
+  var closest = deadlies[0];
   for (var i = 0, len = deadlies.length; i < len; i++) {
     if (closest && closest.d > deadlies[i].d) {
-      closest = deadlies[i];
-    } else {
       closest = deadlies[i];
     }
   }
