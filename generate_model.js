@@ -1,39 +1,17 @@
-var fs = require('fs');
-
-var gameData = JSON.parse(fs.readFileSync('games.json'));
-var tickData = JSON.parse(fs.readFileSync('ticks.json'));
-
-function getBestGameIds(gameData) {
-  var gameIds = [];
-  var sorted = gameData.sort(function(a, b) {
-    return a.totalPoints - b.totalPoints;
-  });
-  sorted = sorted.slice(5);
-  for (var i in sorted) {
-    gameIds.push(sorted[i].gameId);
-  }
-  return gameIds;
-}
-
-function getClosestDeadly(deadlies) {
-  var closest = deadlies[0];
-  for (var i = 0, len = deadlies.length; i < len; i++) {
-    if (closest && closest.d > deadlies[i].d) {
-      closest = deadlies[i];
+function generateModel(listOfDims, classFn, pos, depth) {
+  pos = pos || [];
+  depth = depth || 0;
+  var dim = listOfDims[0];
+  var res = [];
+  for (var i = dim.min; i <= dim.max; i+= dim.stepSize) {
+    pos[depth] = i;
+    if (listOfDims.length > 1) {
+      res.push(generateModel(listOfDims.slice(1), classFn, pos, depth + 1));
+    } else {
+      res.push(classFn(pos));
     }
   }
-  return closest;
+  return res;
 }
 
-function getModelData(gameIds) {
-  var points = [];
-  for (var i in tickData) {
-    if (gameIds.indexOf(tickData[i].gameId) != -1) {
-      var closest = getClosestDeadly(tickData[i].deadlies);
-      points.push([closest.d, closest.t, tickData[i].classification]);
-    }
-  }
-  return points;
-}
-
-console.log(getModelData(getBestGameIds(gameData)));
+module.exports = generateModel;
