@@ -27,22 +27,47 @@ function getClosestDeadly(deadlies) {
   return closest;
 }
 
-function getModelData(gameIds) {
+function getModelData(gameIds, tickData) {
   var points = [];
   for (var i in tickData) {
     if (gameIds.indexOf(tickData[i].gameId) != -1) {
       var closest = getClosestDeadly(tickData[i].deadlies);
-      points.push([closest.d, closest.t, tickData[i].classification]);
+      points.push([closest.t, closest.d, tickData[i].classification]);
     }
   }
   return points;
 }
 
-function getClassificationForPoint1(point) {
-  return 0;
+function pointWithinCircle(point, center, radius) {
+  var sum = 0;
+  for (var i = 0, len = center.length; i < len; i++) {
+    sum += Math.pow(point[i] - center[i], 2);
+  }
+  return Math.sqrt(sum) < radius;
 }
+
+var defaultRadius = 10;
+function getClassificationForPoint1(modelData, point) {
+  var r = defaultRadius;
+  var classCounts = modelData.reduce(function (counts, dataPoint) {
+    if (pointWithinCircle(dataPoint, point, r)) {
+      var c = dataPoint[dataPoint.length - 1];
+      counts[c] = (counts[c] || 0) + 1;
+    }
+    return counts;
+  }, []);
+  return classCounts.reduce(function (cls, currCount, currCls, arr) {
+    return currCount > (arr[cls] || 0) ? currCls : cls;
+  }, 0);
+}
+
+var classFn = (function (modelData) {
+  return function (point) {
+    return getClassificationForPoint1(modelData, point);
+  };
+})(getModelData(getBestGameIds(gameData), tickData));
 
 fs.writeFile('public/models/' + (new Date()).getTime() + '.json', JSON.stringify({
   config: config,
-  model: generateModel(config, getClassificationForPoint1)
+  model: generateModel(config, classFn)
 }));

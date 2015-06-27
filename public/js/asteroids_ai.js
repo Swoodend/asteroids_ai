@@ -142,7 +142,7 @@ AsteroidsAi = (function() {
   var RIGHT = 39;
   AiCtor.keysToClassification = function(keys) {
     var c = 0;
-    if (keys.indexOf(RIGHT) != -1) {
+    if (keys.indexOf(UP) != -1) {
       c += ACC;
     }
     if (keys.indexOf(LEFT) != -1 || keys.indexOf(RIGHT) != -1) {
