@@ -130,6 +130,9 @@ AsteroidsAi = (function() {
 
   function getKeysToPress(gameState) {
     var closestDeadly = getClosestDeadly(gameState.sprites);
+    if (!closestDeadly) {
+      return [32];
+    }
     var deadlyAngle = closestDeadly.t;
     while (deadlyAngle < 0) {
       deadlyAngle += 360;
