@@ -98,6 +98,14 @@ AsteroidsAi = (function() {
     var distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((deltaY), 2));
     var angle = (Math.atan2(deltaY, deltaX) * 180 / Math.PI) - (ship.rot - 90);
 
+    while (angle > 360) {
+      angle -= 360;
+    }
+
+    while (angle < 0) {
+      angle += 360;
+    }
+
     return {
       s: shootable,
       d: distance,
