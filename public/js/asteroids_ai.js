@@ -16,7 +16,7 @@ AsteroidsAi = (function() {
   AiCtor.prototype.onTick = function () {
     var gameObject = getGameObject();
     var gameData = extractGameData(gameObject);
-    var keysToPress = getKeysToPress(gameData);
+    var keysToPress = Math.random() > 0.9 ? getKeysToPress(gameData) : getRandomKeysToPress();
     pressKeys(keysToPress);
     return {
       gameData: gameData,
@@ -33,6 +33,21 @@ AsteroidsAi = (function() {
   AiCtor.prototype.gameShouldContinueBeingPlayed = function () {
     return getGameObject().lives != -1;
   };
+
+  function getRandomKeysToPress() {
+    var keysToPress = [32];
+    if (Math.random() > 0.5) {
+      keysToPress.push(38);
+    }
+    if (Math.random() > 0.5) {
+      if (Math.random() > 0.5) {
+        keysToPress.push(39);
+      } else {
+        keysToPress.push(37);
+      }
+    }
+    return keysToPress;
+  }
 
   function getGameWindow() {
     return gwin;

@@ -39,25 +39,24 @@
   }
 
   function startTrials() {
-    runTrials(getNumberOfTrials());
+    runTrials();
   }
 
-  function getNumberOfTrials() {
-    return 1;
-  }
-
-  function runTrials(numberOfTrials) {
+  function runTrials() {
     loadGameIntoIframe().done(function () {
       startGame().done(function () {
         endGame();
-        numberOfTrials--;
-        if (numberOfTrials > 0) {
-          runTrials(numberOfTrials);
+        if (shouldContinueTrials()) {
+          runTrials();
         } else {
           endTrials();
         }
       });
     });
+  }
+
+  function shouldContinueTrials() {
+    return true;
   }
 
   function endTrials() {
