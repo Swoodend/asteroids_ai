@@ -2,19 +2,41 @@ var fs = require('fs');
 var generateModel = require('./generate_model');
 var config = require('./config');
 
-var gameData = JSON.parse(fs.readFileSync('games.json'));
-var tickData = JSON.parse(fs.readFileSync('ticks.json'));
+var MongoClient = require('mongodb').MongoClient;
+var mongoUrl = 'mongodb://localhost:27017/aidb';
 
-function getBestGameIds(gameData) {
-  var gameIds = [];
-  var sorted = gameData.sort(function(a, b) {
-    return a.totalPoints - b.totalPoints;
+function getBestGameIds(cb) {
+  MongoClient.connect(mongoUrl, function(err, db){
+    if (err){
+      console.log(err);
+      db.close();
+      return;
+    }
+    db.collection('games').find().sort({duration: -1}).limit(10).toArray(function(err, games){
+      db.close();
+      if (typeof cb === 'function') {
+        cb(games.map(function(game) {
+          return game.gameId;
+      }));
+      }
+    });
   });
-  sorted = sorted.slice(5);
-  for (var i in sorted) {
-    gameIds.push(sorted[i].gameId);
-  }
-  return gameIds;
+}
+
+function getTickData(gameIds, cb) {
+  MongoClient.connect(mongoUrl, function(err, db){
+    if (err){
+      console.log(err);
+      db.close();
+      return;
+    }
+    db.collection('ticks').find({gameId: {$in: gameIds}}).toArray(function(err, ticks){
+      db.close();
+      if (typeof cb === 'function') {
+        cb(ticks);
+      }
+    });
+  });
 }
 
 function getClosestDeadly(deadlies) {
@@ -27,13 +49,11 @@ function getClosestDeadly(deadlies) {
   return closest;
 }
 
-function getModelData(gameIds, tickData) {
+function getModelData(tickData) {
   var points = [];
   for (var i in tickData) {
-    if (gameIds.indexOf(tickData[i].gameId) != -1) {
-      var closest = getClosestDeadly(tickData[i].deadlies);
-      points.push([closest.t, closest.d, tickData[i].classification]);
-    }
+    var closest = getClosestDeadly(tickData[i].deadlies);
+    points.push([closest.t, closest.d, tickData[i].classification]);
   }
   return points;
 }
@@ -61,13 +81,18 @@ function getClassificationForPoint1(modelData, point) {
   }, 0);
 }
 
-var classFn = (function (modelData) {
-  return function (point) {
-    return getClassificationForPoint1(modelData, point);
-  };
-})(getModelData(getBestGameIds(gameData), tickData));
+getBestGameIds( function (gameIds) {
+  getTickData(gameIds, function(ticks) {
+    getModelData(ticks);
+    var classFn = (function (modelData) {
+      return function (point) {
+        return getClassificationForPoint1(modelData, point);
+      };
+    })(getModelData(ticks), ticks);
 
-fs.writeFile('public/models/' + (new Date()).getTime() + '.json', JSON.stringify({
-  config: config,
-  model: generateModel(config, classFn)
-}));
+     fs.writeFile('public/models/' + (new Date()).getTime() + '.json', JSON.stringify({
+        config: config,
+        model: generateModel(config, classFn)
+      }));
+  });
+});
