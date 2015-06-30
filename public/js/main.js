@@ -1,4 +1,7 @@
 (function () {
+
+  var fastMode =  location.search.indexOf('fastmode=true') > -1;
+
   var socket = io();
   socket.once('connect', initialize);
 
@@ -93,7 +96,7 @@
     gameId = (new Date()).getTime();
     $.publish('gameStarted', [gameId, getAiId()]);
     gameTime = (new Date()).getTime();
-    AI.startGame(getGameWindow());
+    AI.startGame(fastMode);
     var g = $.Deferred();
     tick(g);
     return g;

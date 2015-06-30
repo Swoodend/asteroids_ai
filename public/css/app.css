@@ -2,6 +2,7 @@ body {
   background: #3A3A3C;
   color: #fff;
   font-family: 'Unica One', Arial, sans-serif;
+  margin-top: 50px;
 }
 
 button {
@@ -128,22 +129,38 @@ iframe {
   color: red;
 }
 
+#main {
+  margin-left: 200px;
+  padding: 2em 50px;
+}
+
 #nav {
   background-color: #4A4A4C;
   height: 50px;
   left: 0;
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
 }
 
-#nav .brand {
+#nav a {
   color: #fff;
-  font-size: 120%;
   font-weight: bold;
   line-height: 50px;
   padding: 0 10px;
   text-decoration: none;
+
+}
+
+#nav .brand {
+  font-size: 120%;
+}
+#nav .brand, #nav .menu {
+  float: left;
+}
+
+#nav .menu {
+  margin: 0 0 0 2em;
 }
 
 #overview {
@@ -166,5 +183,27 @@ iframe {
   height: 250px;
   margin: -80px auto 0;
 
+}
+
+#sidebar {
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  top: 50px;
+  width: 180px;
+  background: #555;
+
+
+}
+
+#trial-index {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#trial-index li:hover {
+  cursor: pointer;
 }
 
