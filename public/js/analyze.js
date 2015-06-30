@@ -29,7 +29,7 @@ $.getJSON('/trials', function(trials){
       },
       yAxis: {
         title: {
-          text: 'Temperature (°C)'
+          text: 'Points Acquired'
         },
         plotLines: [{
           value: 0,
