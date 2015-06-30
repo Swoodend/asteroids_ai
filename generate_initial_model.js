@@ -1,42 +1,21 @@
 var fs = require('fs');
+var generateModel = require('./generate_model');
+var config = require('./config');
 
-var config = [{
-    name: 'angleToNearestAsteroid',
-    min: 0,
-    max: 359,
-    stepSize: 10
-  }, {
-    name: 'distanceToNearestAsteroid',
-    min: 0,
-    max: 500,
-    stepSize: 10
-}];
-
-function generateModel(listOfDims, pos, depth) {
-  pos = pos || [];
-  depth = depth || 0;
-  var dim = listOfDims[0];
-  var res = [];
-  for (var i = dim.min; i < dim.max; i+= dim.stepSize) {
-    pos[depth] = i;
-    if (listOfDims.length > 1) {
-      res.push(generateModel(listOfDims.slice(1), pos, depth + 1));
-    } else {
-      if (pos[0] < 90) {
-        res.push(3);
-      } else if (pos[0] >= 90 && pos[0] < 270) {
-        res.push(4);
-      } else if (pos[0] >= 270) {
-        res.push(2);
-      }
-    }
+function getClassificationForPoint0(pos) {
+  if (pos[0] < 90) {
+    return 3;
   }
-  return res;
+  if (pos[0] >= 90 && pos[0] < 270) {
+    return 4;
+  }
+  if (pos[0] >= 270) {
+    return 2;
+  }
+  return 0;
 }
 
-var model = {
+fs.writeFile('public/models/0.json', JSON.stringify({
   config: config,
-  model: generateModel(config)
-};
-
-fs.writeFile('public/models/0.json', JSON.stringify(model));
+  model: generateModel(config, getClassificationForPoint0)
+}));
