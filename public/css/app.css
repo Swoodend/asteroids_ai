@@ -203,3 +203,7 @@ iframe {
   padding: 0;
 }
 
+#trial-index li:hover {
+  cursor: pointer;
+}
+

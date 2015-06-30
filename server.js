@@ -10,6 +10,7 @@ var io = require('socket.io')(http);
 
 app.use(express.static('public'));
 app.use(express.static('bower_components'));
+http.listen(process.env.PORT || 3000);
 
 app.get('/trials', function(req, res){
   MongoClient.connect(mongoUrl, function(err, db){
@@ -18,7 +19,7 @@ app.get('/trials', function(req, res){
       db.close();
       return;
     }
-    db.collection('games').find().toArray(function(err, games){
+    db.collection('games').find().limit(10).toArray(function(err, games){
       if (err){
         res.status(500).send(err);
         db.close();
@@ -29,6 +30,25 @@ app.get('/trials', function(req, res){
     })
   })
 });
+
+app.get('/trials/:id', function(req, res){
+  MongoClient.connect(mongoUrl, function(err, db){
+    if (err){
+      res.status(500).send(err);
+      db.close();
+      return;
+    }
+    db.collection('ticks').find({gameId: parseInt(req.params.id)}).toArray(function(err, ticks){
+      if (err){
+        res.status(500).send(err);
+        db.close();
+        return;
+      }
+      res.send(ticks);
+      db.close();
+    })
+  })
+})
 
 io.on('connection', function(socket){
   MongoClient.connect(mongoUrl, function(err, db){
@@ -56,7 +76,5 @@ io.on('connection', function(socket){
     });
   });
 });
-
-http.listen(process.env.PORT || 3000);
 
 
