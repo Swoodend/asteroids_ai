@@ -16,7 +16,7 @@ AsteroidsAi = (function() {
   AiCtor.prototype.onTick = function () {
     var gameObject = getGameObject();
     var gameData = extractGameData(gameObject);
-    var keysToPress = getKeysToPress(gameData);
+    var keysToPress = Math.random() > 0.9 ? getKeysToPress(gameData) : getRandomKeysToPress();
     pressKeys(keysToPress);
     return {
       gameData: gameData,
@@ -33,6 +33,21 @@ AsteroidsAi = (function() {
   AiCtor.prototype.gameShouldContinueBeingPlayed = function () {
     return getGameObject().lives != -1;
   };
+
+  function getRandomKeysToPress() {
+    var keysToPress = [32];
+    if (Math.random() > 0.5) {
+      keysToPress.push(38);
+    }
+    if (Math.random() > 0.5) {
+      if (Math.random() > 0.5) {
+        keysToPress.push(39);
+      } else {
+        keysToPress.push(37);
+      }
+    }
+    return keysToPress;
+  }
 
   function getGameWindow() {
     return gwin;
@@ -69,11 +84,9 @@ AsteroidsAi = (function() {
   }
 
   function getClosestDeadly(deadlies) {
-    var closest;
+    var closest = deadlies[0];
     for (var i = 0, len = deadlies.length; i < len; i++) {
       if (closest && closest.d > deadlies[i].d) {
-        closest = deadlies[i];
-      } else {
         closest = deadlies[i];
       }
     }
@@ -100,6 +113,14 @@ AsteroidsAi = (function() {
     var distance = Math.sqrt(Math.pow((deltaX), 2) + Math.pow((deltaY), 2));
     var angle = (Math.atan2(deltaY, deltaX) * 180 / Math.PI) - (ship.rot - 90);
 
+    while (angle > 360) {
+      angle -= 360;
+    }
+
+    while (angle < 0) {
+      angle += 360;
+    }
+
     return {
       s: shootable,
       d: distance,
@@ -109,6 +130,9 @@ AsteroidsAi = (function() {
 
   function getKeysToPress(gameState) {
     var closestDeadly = getClosestDeadly(gameState.sprites);
+    if (!closestDeadly) {
+      return [32];
+    }
     var deadlyAngle = closestDeadly.t;
     while (deadlyAngle < 0) {
       deadlyAngle += 360;
@@ -144,7 +168,7 @@ AsteroidsAi = (function() {
   var RIGHT = 39;
   AiCtor.keysToClassification = function(keys) {
     var c = 0;
-    if (keys.indexOf(RIGHT) != -1) {
+    if (keys.indexOf(UP) != -1) {
       c += ACC;
     }
     if (keys.indexOf(LEFT) != -1 || keys.indexOf(RIGHT) != -1) {

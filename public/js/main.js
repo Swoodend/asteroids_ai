@@ -4,7 +4,7 @@
 
   var AI;
   function initialize() {
-    $.getJSON('/models/0.json', function(model) {
+    $.getJSON('/models/' + getAiId() + '.json', function(model) {
       AI = new AsteroidsAi(getGameWindow(), model);
       $.subscribe('startTrials', startTrials);
       $.subscribe('gameStarted', saveGame);
@@ -39,25 +39,24 @@
   }
 
   function startTrials() {
-    runTrials(getNumberOfTrials());
+    runTrials();
   }
 
-  function getNumberOfTrials() {
-    return 1;
-  }
-
-  function runTrials(numberOfTrials) {
+  function runTrials() {
     loadGameIntoIframe().done(function () {
       startGame().done(function () {
         endGame();
-        numberOfTrials--;
-        if (numberOfTrials > 0) {
-          runTrials(numberOfTrials);
+        if (shouldContinueTrials()) {
+          runTrials();
         } else {
           endTrials();
         }
       });
     });
+  }
+
+  function shouldContinueTrials() {
+    return true;
   }
 
   function endTrials() {
@@ -130,7 +129,13 @@
   }
 
   function getAiId() {
-    return 1;
+    if (location.search.indexOf('ai') != -1) {
+      var num = location.search.match(/\d/g);
+      num = num.join('');
+      return num;
+    } else {
+      return 0;
+    }
   }
 
   function getGameTime() {
